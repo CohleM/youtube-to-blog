@@ -1,0 +1,59 @@
+### Understanding Tokenization and Extending GPT Tokenizer with Custom Special Tokens
+
+In today's blog post, I'm going to go over the fundamentals of tokenizer extension in the context of machine learning language models, particularly OpenAI's GPT models. I'll walk you through the process step by step, breaking down the complex topics into easier-to-understand parts.
+
+#### Exploring the Tokenization Process
+
+The tokenization process is essential for natural language processing tasks. It involves breaking down text into smaller pieces, or tokens, which the model can understand and process. OpenAI's TikTok library allows for the extension of the base tokenizers, which means we can introduce custom tokens of our choosing.
+
+#### Registering Special Tokens in GPT-2 and GPT-4
+
+When examining the tokenization file for GPT-2 in the Tik Tok library, we can see that it registers a single special token called the end of text token. This token is assigned a specific ID that the model recognizes. In contrast, when we look at the GPT-4 tokenizer, the pattern for splitting text has changed, and additional special tokens have been added aside from the end of text token.
+
+For instance, we see tokens like `Thim`, `prefix`, `middle`, and `suffix`. Especially notable is 'FIM', which stands for 'Fill in the Middle.' This concept derives from a particular paper, the details of which go beyond the scope of our current discussion. Additionally, a 'serve' token is included in the tokenizer as well.
+
+#### Model Surgery: Adding Special Tokens
+
+The addition of special tokens isn't as straightforward as just updating the tokenizer; it requires what's known as "model surgery." This process requires two main adjustments:
+
+1. **Embedding Matrix Extension**: When you introduce a new token with a unique integer ID, you must ensure the embedding matrix, which holds vectors for each token, is expanded accordingly. A new row is typically appended to this matrix and initialized with small, random numbers to represent the vector for the new token.
+
+2. **Final Layer Adjustment**: You must also extend the projection in the final layer of the Transformer model. This is the part that connects to the classifier and needs to be expanded to account for the new token.
+
+This type of model surgery needs to be done in tandem with the tokenization changes if you plan on introducing custom tokens.
+
+#### Creating a Custom GPT-4 Tokenizer
+
+With the knowledge of how to add special tokens and the requirement of model surgery, it’s possible to build your own GPT-4 tokenizer. While developing this blog post, I actually went through this process and prepared a custom tokenizer. The code is published in a GitHub repository labeled 'MBP.'
+
+#### GitHub Repository: MBP Tokenizer Code
+
+To illustrate further, I will show you the layout of the repository MBP and its contents:
+
+- The **src** folder contains the source code for the tokenizer.
+- The **tests** folder has the unit tests to validate the tokenizer's functionality.
+- The **tiktoken_ext** folder is where extensions to the original TikTok library are housed. In particular, the `openai_public.py` file holds the specific customizations for the GPT models.
+
+Let's take a closer look at the `openai_public.py` file:
+
+```python
+# The content in openai_public.py file
+mergeable_ranks = data_gym_to_mergeable_bpe_ranks(...)
+vocab_bpe_file = "..."
+encoder_json_file = "..."
+vocab_bpe_hash = "..."
+encoder_json_hash = "..."
+
+# This returns a dictionary specifying the tokenizer configuration for GPT-2
+return {
+    "name": "gpt2",
+    "explicit_n_vocab": 50257,
+    "pattern": r"the pattern string here",
+    "mergeable_ranks": mergeable_ranks,
+    "special_tokens": {ENDOFTTEXT: 50256},
+}
+```
+
+This code snippet is a simple example of how a GPT-2 tokenizer configuration might look. However, you would have to modify it to add any new special tokens and their related configurations.
+
+I hope this detailed explanation of the tokenizer extension process in the TikTok library and the necessity of model surgery gives you a clear understanding of how custom tokenization works with language models like GPT-4. Stay tuned for more in-depth technical posts on NLP and AI!

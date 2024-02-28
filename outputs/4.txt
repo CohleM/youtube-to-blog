@@ -1,0 +1,32 @@
+### Understanding Tokenization in Language Models
+
+Tokenization is a foundational concept in the field of Natural Language Processing (NLP), and it's particularly critical for the function of Large Language Models (LLMs). Let's delve into this concept step-by-step, as illustrated in the video and text provided.
+
+#### The Concept of Tokenization
+
+Tokenization is the process of breaking down text into smaller pieces, called tokens. These can be words, subwords, or even characters. This process seems simple, but it can become quite complex, especially when considering different contexts or languages.
+
+#### Case Study: The Word "Egg"
+
+The word "Egg" is an excellent example of how tokenization can differ based on context. In the given example, we see that the word "Egg" can be tokenized differently depending on its placement in a sentence, its case, or even when it's combined with other words. Here are the scenarios provided:
+
+- "Egg" at the beginning of a sentence was split into two tokens.
+- When used in the phrase "I have an Egg," the word "egg" remained a single token.
+- The lowercase "egg" is also a single token, but it is different from the capitalized "Egg."
+- "EGG" in all uppercase is considered different tokens again.
+  
+This shows the tokenization is case-sensitive and context-dependent. The language model must learn to understand that all these variations represent the same concept.
+
+#### Tokenizing Non-English Text
+
+The discussion in the video also touched upon the tokenization of non-English languages, using Korean as an example. The language model, such as GPT or ChatGPT, is trained on datasets where English text is significantly more prevalent. This imbalance can result in less efficient tokenization for non-English languages. Essentially, English sentences might be broken down into more extended tokens compared to those in other languages due to the training data distribution.
+
+#### Tokenization and Language Model Learning
+
+The takeaway here is that language models like GPT-2 must adapt to the nuances of tokenization to understand and generate coherent text. They must learn from vast amounts of data and interpret various forms of the same word or phrase as semantically equivalent. Tokenization is not just a mechanical process but a gateway to understanding language complexities.
+
+> "Tokenization is at the heart of much weirdness of LLMs. Do not brush it off."
+
+This quote from the video encapsulates the necessity of paying attention to tokenization since it deeply influences how language models process and output language.
+
+By examining different forms of a single word and how they are tokenized, we can better appreciate the intricacies involved in preparing data for language models to learn from. It's clear that there's a delicate balance between the mechanical action of tokenizing and the interpretive learning that a model must undertake to effectively process language.

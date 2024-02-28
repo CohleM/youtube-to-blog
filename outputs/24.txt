@@ -1,0 +1,64 @@
+### Explanation of Byte Pair Encoding in Python
+
+Byte Pair Encoding (BPE) is an algorithm used in natural language processing to perform data compression and is also used as a subword tokenization method for neural network-based machine translation. Let's break down the explanation step-by-step using the text we have and the accompanying Python code.
+
+#### Identifying Byte Pairs for Merging
+
+The first step in Byte Pair Encoding involves finding pairs of bytes (or characters in text) that often occur next to each other. We encode text into a sequence of tokens that are initially single characters.
+
+Here's a function to encode text into tokens:
+
+```python
+def encode(text):
+    # given a string, return list of integers (the tokens)
+    tokens = list(text.encode("utf-8"))
+    return tokens
+
+print(encode("hello world!"))
+```
+
+In this code, we're converting text into UTF-8 encoded bytes and treating each byte as a separate token.
+
+#### Counting Byte Pairs
+
+Next, we use a function `get_stats` that analyzes the frequency of each consecutive pair of tokens in our encoded sequence, returning this information as a dictionary. The dictionary maps byte pairs to how often they occur together.
+
+```python
+while True:
+    stats = get_stats(tokens)
+```
+
+We loop continuously (as we will be merging pairs iteratively until we reach a stopping condition or a final reduced set of tokens).
+
+#### Selecting Pairs to Merge
+
+From the dictionary of pairs, we don't need the exact frequencies at this moment—instead, we're interested in the pairs themselves. We want to identify which pair to merge at this stage.
+
+#### Choosing the Minimum Indexed Pair
+
+We aim to find the pair with the lowest index in a separate `merges` dictionary that reflects the order of merges. This is crucial for maintaining the correct order of operations. The `merges` dictionary maps byte pairs to their merge index.
+
+#### The Fancy Python Min Over an Iterator
+
+Here's the fancy Python trick mentioned. Instead of looping through the dictionary, we can find the pair with the lowest merge index using the `min` function over the keys of the `stats` dictionary and a custom key function.
+
+```python
+pair = min(stats, key=lambda p: merges.get(p, float("inf")))
+```
+
+In this line:
+
+- `min` finds the pair with the smallest value as determined by the key function.
+- The `lambda` expression defines a function that takes a pair `p` and returns its merge index from the `merges` dictionary.
+- If a pair doesn't exist in `merges`, it defaults to infinity (`float("inf")`), thus it will not be chosen for merging.
+- After identifying the pair with the smallest index, it becomes the merge candidate.
+
+#### Pair Merging Example
+
+For example, if the pairs `(101, 32)` and `(259, 256)` are candidates and `(101, 32)` has a lower index in the `merges` dictionary, then it will be selected for merging.
+
+Given the context, your algorithm would proceed to merge the identified pair in your sequence of tokens and then update the token sequence accordingly.
+
+> This step is part of an iterative process—repeating the token pairing and merging until a stopping condition is met, which would depend on the specific implementation and goal of the tokenization (like reaching a specific number of merges or token vocabulary size).
+
+Remember, the code provided in the images is part of a larger implementation of the Byte Pair Encoding algorithm, which is widely used in various natural language processing tasks.

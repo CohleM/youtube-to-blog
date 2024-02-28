@@ -1,0 +1,31 @@
+### Understanding Tokenization in Language Models
+
+In my exploration of language models, particularly with the improvements from GPT-2 to GPT-4, I've uncovered the significance of tokenization as a critical factor in the coding ability of such models.
+
+#### The Importance of Tokenization
+
+Tokenization plays a pivotal role in how language models interpret and process data. It's a process that involves converting strings of text into a sequence of tokens, which can signify words, characters, or subwords. This step is crucial as it directly affects the model's capacity to understand and predict text.
+
+In the case of GPT-4, tokenization efficiency has been significantly enhanced because of how it deals with spaces in Python code. OpenAI has made a deliberate choice to group spaces more efficiently, allowing the model to handle Python more effectively. This optimization is not only a language model improvement; it's also a result of the tokenizer's design and the way it groups characters into tokens.
+
+#### Tokenizing Strings into Integers
+
+When writing code, the goal is to take strings and feed them into language models. To do this, strings must be tokenized into integers within a fixed vocabulary. These integers are then used to look up into a table of vectors, which are fed into the Transformer as input.
+
+This process becomes tricky because it necessitates support for not just the English alphabet, but various languages and special characters, including emojis, which are prevalently used across the internet.
+
+#### Dealing with Unicode Code Points
+
+Understanding strings in Python reveals that they are immutable sequences of Unicode code points. For those wondering what Unicode code points are, they're defined by the Unicode Consortium as part of the Unicode standard. This standard consists of roughly 150,000 characters across 161 scripts, each associated with an integer to represent it.
+
+> "Unicode code points are defined by the Unicode Consortium as part of the Unicode standard."
+
+As per the latest update, the Unicode standard version 15.1 was released in September 2023. The standard is extensive and continues to evolve, encompassing a myriad of character types beyond alphabetic letters, including emojis and various symbols, thereby facilitating a comprehensive linguistic representation.
+
+In practice, dealing with Unicode means that a string like "안녕하세요 😊 (hello in Korean)!" would be processed differently than a simple English sentence due to the way each character is represented in the Unicode standard. Each character or emoji would be converted into its corresponding sequence of integers, which can then be fed into a language model.
+
+#### Tokenization in Practice
+
+To illustrate tokenization, I mapped out a Python code snippet and its corresponding tokenization output. The script shows basic English sentences, Korean text, and even the renowned "FizzBuzz" programming challenge. Tokenization turns these examples into a series of numbers that a language model like GPT-4 can interpret. This transformation is fundamental for language processing tasks.
+
+In conclusion, while tokenization may seem like an obscure backend process, it is critical to the performance of advanced language models like GPT-4. It allows for efficient processing of diverse languages and characters, contributing to the models’ robust, multilingual capabilities. Understanding tokenization's impact on language models deepens our appreciation for the intricate mechanics that fuel today's AI-driven linguistic advancements.

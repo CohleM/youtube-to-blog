@@ -1,0 +1,49 @@
+### Exploring Regular Expressions in Tokenization
+
+In the world of natural language processing, tokenization is a fundamental step. It involves breaking down text into individual elements called tokens, which can be words, characters, or subwords. In this blog section, I’m going to step you through a crucial aspect of tokenization facilitated by regular expressions, also known as regex.
+
+#### Breaking Down Text with Regex
+
+We'll start by understanding how an optional space followed by a sequence of letters can be used to generate a list of elements from a string. The previous text explained that a regex pattern designed to capture a sequence of letters can match instances like "hello" in a given string; following a space, it would restart the search for the next match. This pattern is crucial in text processing for languages with space-separated words.
+
+#### Applying Regex in Code
+
+In the Python code, we’re using the `regex` module to compile a pattern and apply it to a sample text:
+
+```python
+import regex as re
+gpt2pat = re.compile(r"'\m\{L\}+'|\m\{L\}'|\m\{N\}+|[^'\s\p{L}\p{N}]+|[\s]+")
+print(re.findall(gpt2pat, "Hello world are you"))
+```
+
+This pattern looks for multiple substrings within a text according to the specified regex criteria, such as one or more letters `(\m{L}+)`, a single letter `(\m{L})`, one or more numbers `(\m{N}+)`, a sequence of characters that are neither letters nor spaces nor numbers `([^'\s\p{L}\p{N}]+)`, or one or more whitespace characters `([\s]+)`. The `re.findall` method then extracts these substrings, in this case yielding the result `['Hello', ' world', ' are', ' you']`.
+
+#### Understanding the Tokenization Process
+
+Now let’s delve into what happens during tokenization with this regex approach. Each element of the list obtained by the regex pattern is processed individually by the tokenizer. Subsequently, the resulting tokens from each element are concatenated to form the final token sequence.
+
+This method ensures that certain character combinations, such as the letter 'e' with a succeeding space, will not merge. This is because they are treated as separate list elements due to the regex pattern. Let’s illustrate this with an example:
+
+> "Hello world how are you" becomes the list `['Hello', ' world', ' how', ' are', ' you']`.
+
+Each of these list elements then transitions from text to tokens independently. After processing:
+
+- 'Hello' might become `['Hello']`
+- ' world' might become `['world']`
+- ' how' might become `['how']`
+- ' are' might become `['are']`
+- ' you' might become `['you']`
+
+Afterward, these tokens are concatenated back together. This process defines the scope of merging operations to within the individual elements, avoiding undesirable mergers across separate textual components.
+
+#### Regex Tutorial and Unicode Characters
+
+The first image shows part of a regex tutorial outlining various Unicode character properties that can be utilized in regex patterns. For example, `\p{L}` or `\p{Letter}` matches any kind of letter from any language, `\p{N}` or `\p{Number}` matches any kind of numeric character including digits, and `\p{S}` or `\p{Symbol}` matches various symbols.
+
+Understanding these Unicode properties is essential to create effective regex expressions that cater to a wide range of languages and special characters.
+
+#### The Practical Use of Regex in Tokenization
+
+Lastly, the visual scheme in the third image highlights the relationship between raw text, tokenization, and the language model (LLM). The tokenizer operates as an independent module, employing algorithms like Byte Pair Encoding (BPE) to convert raw text into tokens. These tokens serve as the basis for subsequent language modeling.
+
+To summarize, regular expressions are a powerful tool for segmenting text in preparation for tokenization, ensuring the integrity of meaningful linguistic units and enabling complex language processing tasks.

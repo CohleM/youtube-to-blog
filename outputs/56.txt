@@ -1,0 +1,42 @@
+### Understanding the Role of Tokenization in Language Models
+
+I've been discussing some complex but fascinating aspects of how language models like GPT-2 and LLM (Large Language Models) work, and at the heart of many of the challenges and behaviors we see in these models is tokenization.
+
+#### Why Tokenization Matters
+
+Tokenization is a critical and foundational step in the process of training and utilizing language models. It's the process by which we convert raw text into tokens that a model can understand and process.
+
+> Tokenization can impact a wide range of tasks, from the model's ability to perform arithmetic to its handling of programming languages like Python. 
+
+#### Tokenization and Python Coding in GPT-2
+
+One topic that came up in our exploration is the tokenization of code, particularly Python code, and how this affects the performance of a model like GPT-2. For example, the tokenizer's inefficient handling of spaces as individual tokens reduces the context length that the model can consider. This can be partly considered a 'tokenization bug' which impacts the model's ability to understand and generate Python code effectively. It's interesting to note that this was later fixed in newer models.
+
+#### Special Tokens and Potential Halt Behavior
+
+In a rather intriguing case, my Large Language Model (LLM) unexpectedly halted when encountering the string "end of text." This could point toward an internal handling where "end of text" is parsed as a special token rather than a sequence of separate tokens. It raises an important point about how LLMs deal with input that includes potential command or control strings like special tokens:
+
+> The parsing of this special string could indeed indicate a vulnerability or an oversight in how the model processes certain types of inputs.
+
+#### The Issue of Trailing Whitespace
+
+Another peculiar behavior to discuss involves the handling of trailing whitespace. In some instances, like with GPT-3.5 turbo instruct, trailing whitespace can create unexpected outcomes. This model is designed for completions rather than chat, which means it should output information continuation rather than a conversation. The nuances in how a model treats whitespace again point back to tokenization and how critical it is in understanding model behavior.
+
+#### Visual Analysis of Tokenization in GPT-2
+
+Without visual aids, it might be challenging to fully grasp the complexities involved in tokenization. Thus, let's consider the accompanying images. One image shows a graph reflecting the composition of number tokens in the GPT-2 tokenizer.
+
+![Number composition graph](attachment:image.png)
+
+*Illustration of how composite number tokens are parsed by the GPT-2 tokenizer.*
+
+By breaking down the categorization for tokenizing four-digit numbers, we gain insights into what might seem like erratic encoding strategies but are actually patterns which the model follows.
+
+#### Insights from the Images
+
+From the images, we can deduce several things:
+
+- There's an uneven distribution in the encoding strategies for numbers, which can complicate the model's numerical computation capabilities.
+- The tokenization of spaces in Python code by GPT-2 shows inefficiencies, which subsequently influence the model's programming language comprehension.
+
+In conclusion, while our exploration of tokenization sometimes reveals what seems like minor quirks, the implications are far-reaching. They affect the performance of language models in various tasks and even question the robustness of the models in the face of specially crafted inputs. Understanding tokenization is thus essential for not just using these models but also in improving them.

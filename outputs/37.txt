@@ -1,0 +1,64 @@
+### Understanding the GPT-2 Tokenization Process
+
+In this section, we'll break down the tokenization process used by GPT-2, which is vital for how the model processes, understands, and generates text. Let's go step by step to clarify the procedure.
+
+#### Byte-Pair Encoding (BPE)
+At the heart of the GPT-2 tokenization process is the **Byte-Pair Encoding (BPE)** function. This function systematically merges the most frequent pairs of bytes or characters in the text data to create new tokens. It's a form of compression that allows the model to deal with a large vocabulary in a more efficient manner.
+
+Here's a simplified explanation of the process:
+
+1. **Initialization**: Start with text data and break it down into its raw bytes or characters.
+2. **Frequency Analysis**: Identify the most frequently occurring pairs of bytes/characters.
+3. **Merging**: Merge the most frequent pairs to create new tokens.
+4. **Iteration**: Repeat the merging process for a fixed number of steps or until no more frequent pairs can be found.
+
+#### Special Tokens
+GPT-2 uses special tokens to manage and structure the token sequences. Special tokens are inserted to delineate different parts of the data or to introduce a special structure. Examples are tokens that mark the beginning or end of a sentence.
+
+#### GPT-2's Vocab and Encoding
+The GPT-2 model has a unique vocab mapping that differs from a simple integer-to-string mapping. Instead, it has a mapping that goes the other way around. This model can create a vocabulary of up to 50,257 tokens, which encompasses the 256 raw byte tokens, the merges made by BPE, and any special tokens. 
+
+Here's how it normally works:
+```
+vocab = {int: string}
+```
+But GPT-2 does it the other way around:
+```
+decoder = {string: int}
+```
+
+#### The Tokenizer Structure
+From the images provided, we see that the tokenizer has a structure that looks like this:
+
+1. **Encoder**: Encodes raw text by converting it into a sequence of integers (token IDs).
+2. **Decoder**: Converts a sequence of integers back into text.
+3. **BPE**: The tables and functions needed to merge character pairs according to Byte-Pair Encoding.
+4. **Byte Encoder/Decoder**: A layer that is used serially with the tokenizer, involving bite encoding and bite decoding before and after the standard encoding and decoding process.
+
+Here's a snippet of the encoding code:
+```python
+def bpe(self, token):
+    # ... code logic ...
+    while True:
+        # ... find the minimum rank bigram ...
+        if bigram not in self.bpe_ranks:
+            break
+        # ... merge the bigram into new word ...
+        # ... and update the pairs ...
+```
+
+#### Encoding and Decoding Functions
+The `encode` and `decode` functions are critical for transforming text to and from the token sequence the model works with. Below is a demonstration of the encode function in action:
+```python
+# GPT-2 encoding (does not merge spaces)
+enc = tokenizer.get_encoding("gpt2")
+print(enc.encode(" hello world!!!"))  # Output: [token_ids]
+
+# GPT-4 encoding (merges spaces)
+enc = tokenizer.get_encoding("gpt4")
+print(enc.encode(" hello world!!!"))  # Output: [merged_token_ids]
+```
+
+In summary, the tokenization process in GPT-2 involves breaking down complex text into simpler, manageable pieces that the underlying model can process. Understanding this process gives us insight into how language models like GPT-2 handle and generate human-like text.
+
+> Note: In the current ecosystem of language models, there are many variations and improvements upon the basic tokenization techniques described here. This is part of an ongoing evolution in natural language processing technology.

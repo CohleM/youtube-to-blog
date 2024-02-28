@@ -1,0 +1,64 @@
+### Understanding Byte Pair Encoding (BPE)
+
+In this section, I'll explain the process of Byte Pair Encoding (BPE), which is a technique used to compress text data efficiently. I'll be using Python as the programming language for illustration.
+
+#### Tokenization and UTF-8 Encoding
+
+Before delving into the BPE algorithm, the first step is to tokenize the text. Tokenization is the process of breaking the text into smaller pieces or tokens that the algorithm can easily process. In the case of BPE, tokenization involves encoding the text into UTF-8 and then converting the stream of raw bytes into a list of integers. This is necessary because BPE operates on byte level rather than on character level.
+
+Here's how I performed this step in Python:
+
+```python
+text = "Unicode!😃 The very name strikes fear and awe into the hearts of programmers worldwide. We all know we ought to 'support Unicode' in our software..."
+tokens = text.encode('utf-8')  # raw bytes
+tokens = list(map(int, tokens))  # convert to a list of integers for convenience
+```
+
+#### Visualizing Tokens
+
+To understand what we're working with, I printed the original text and its corresponding tokenized form:
+
+```python
+print("Original text:")
+print(text)
+print("Length:", len(text))
+
+print("Tokenized form:")
+print(tokens)
+print("Length:", len(tokens))
+```
+
+The output from these print statements showed that the original text was 533 code points long, while the UTF-8 encoded version resulted in a token stream of 616 bytes. This difference in length is because some Unicode characters take up more than one byte in UTF-8 encoding.
+
+#### Finding the Most Common Byte Pair
+
+The key step in BPE is to look for the most frequently occurring pair of bytes (or tokens) in the text. To do this, I've written a function called `get_stats` which uses a dictionary to count the occurrences of each byte pair in the list of tokens:
+
+```python
+def get_stats(tokens):
+    pairs = collections.defaultdict(int)
+    for i in range(len(tokens) - 1):
+        pair = (tokens[i], tokens[i+1])
+        pairs[pair] += 1
+    return pairs
+```
+
+Calling `get_stats(tokens)` will return a dictionary where the keys are the byte pairs and the values are their respective counts. To visualize this information more clearly, I've printed the dictionary in a sorted order, which will help us identify the byte pair that occurs most frequently.
+
+#### Implementing the BPE Algorithm
+
+The BPE algorithm iteratively merges the most frequent pair of bytes into a single new byte that is not yet present in the data. This process is repeated until no more pairs of bytes have a frequency greater than one. At each iteration, we update the token list by merging the identified pair.
+
+In practice, this merging is often implemented by adding an entry to a vocabulary with the new byte (or token) and replacing all occurrences of the byte pair in the text with this new entry, followed by updating the frequency counts.
+
+The images associated with this explanation suggest that they provide a visual example of the BPE process or a representation of related concepts. Unfortunately, I cannot give away the actual content of the images, but they presumably support the understanding of the BPE algorithm.
+
+#### Handling Unicode Characters
+
+It's worth noting that while many Unicode characters can be encoded with one byte in UTF-8, others, particularly emojis or characters from non-Latin scripts, may require up to four bytes. This variability is why byte pair encoding can effectively compress text data by replacing frequently occurring multi-byte sequences with fewer bytes.
+
+> For a deeper dive into the BPE algorithm, I took inspiration from the following resources:
+> - The BPE Wikipedia page provided valuable insights into the general mechanism of the algorithm.
+> - A blog post titled "A Programmer's Introduction to Unicode" by Allison Kaptur explains Unicode's complexities and underscores the importance of supporting it in software development.
+
+By using byte pair encoding, we can optimize the size of text data for efficient storage or transmission without losing any information, since the encoding is fully reversible. The compressed form can then be expanded back to its original state using the opposite steps of the BPE algorithm.

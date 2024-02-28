@@ -1,0 +1,62 @@
+### Understanding Tokenizer Training and Compression
+
+In this blog section, I'm going to walk you through the process of training a tokenizer and analyzing its compression ratio to understand the efficiency of the tokenizer. This is a crucial pre-processing step before feeding the text to a large language model (LLM), and it does not involve touching the LLM itself.
+
+#### Merging Tokens Into a Binary Forest Structure
+
+Firstly, let's discuss the idea of merging tokens to create a binary forest structure. We start with an initial set of tokens—let's say 256—and gradually merge pairs of tokens to form new ones. These merges are based on the frequency of consecutive pairs of tokens in our data. Here's the step-by-step process:
+
+- Identify and count all pairs of tokens that appear consecutively.
+- Find the most frequently occurring pair.
+- Create a new token to represent this pair and increment the token index starting from 256.
+- Replace every occurrence of this pair with the newly created token.
+
+The following code snippet demonstrates this process:
+
+```python
+def get_stats(ids):
+    counts = {}
+    for pair in zip(ids, ids[1:]):
+        counts[pair] = counts.get(pair, 0) + 1
+    return counts
+
+def merge(ids, pair, idx):
+    newids = []
+    i = 0
+    while i < len(ids):
+        if i < len(ids) - 1 and ids[i] == pair[0] and ids[i+1] == pair[1]:
+            newids.append(idx)
+            i += 2
+        else:
+            newids.append(ids[i])
+            i += 1
+    return newids
+
+...
+
+for i in range(num_merges):
+    stats = get_stats(ids)
+    pair = max(stats, key=stats.get)
+    idx = 256 + i
+    print(f"merging {pair} into a new token {idx}")
+    ids = merge(ids, pair, idx)
+    merges[pair] = idx
+```
+
+As seen in the images, the first merge happens between tokens 101 and 32, resulting in a new token numbered 256. Importantly, tokens 101 and 32 can still appear in the sequence, but only their consecutive appearance is replaced by the new token. This replacement makes the new token eligible for merging in future iterations. This process creates a binary forest of tokens, rather than a single tree, because merges can happen at different branches and levels.
+
+#### Analyzing the Compression Ratio
+
+After merging pairs of tokens multiple times (20 times in the provided example), we can observe the effect this has on the size of the data. Let's measure the compression ratio, which is the result of the original size divided by the compressed size:
+
+```python
+print(f"tokens length: {len(tokens)}")
+print(f"ids length: {len(ids)}")
+print(f"compression ratio: {len(tokens) / len(ids):.2f}X")
+```
+
+We start with a dataset that's 24,000 bytes. After 20 merges, this reduces to 19,000 tokens, giving us a compression ratio of approximately 1.27. This means we have achieved a 27% reduction in size with just 20 merges. Continuing the merging process with more vocabulary elements can lead to greater compression ratios.
+
+> It's vital to note that this tokenizer is a separate object from the large language model (LLM). Throughout this discussion, everything revolves around the tokenizer, which is a separate pre-processing step before the text is utilized by the LLM.
+
+By breaking down the tokenizer training into these detailed steps, we better understand how we can efficiently reduce the size of text data, which can be crucial for various applications, including but not limited to data storage optimization and speeding up language processing tasks.

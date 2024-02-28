@@ -1,0 +1,46 @@
+### Understanding GPT-2 Tokenization Regex Patterns
+
+When working with the GPT-2 tokenizer, there are several complex patterns that dictate how text is split into tokens. Due to the importance of this process in natural language processing, I'll be taking a deeper dive into this topic to help explain it clearly.
+
+#### Apostrophe Handling in GPT-2 Tokenization
+
+One specific detail in GPT-2 tokenization is the handling of apostrophes. It turns out that the tokenizer treats uppercase and lowercase letters differently when they are adjacent to apostrophes. 
+
+For example, if we consider the word "house's" in lowercase, the apostrophe is kept with the preceding word, maintaining the possession. However, if we capitalize the word to "House's", the tokenizer behaves inconsistently by separating the apostrophe (`'`) from the word "House".
+
+> This could be an issue because it introduces inconsistency in how tokens are produced, which could affect the performance of the model when dealing with capitalized contractions or possessives.
+
+The regex pattern used should, ideally, have implemented the `re.IGNORECASE` flag to handle capitalized versions consistently with lowercase versions, but this wasn't done, leading to the mentioned behavior.
+
+#### Language Specific Concerns
+
+Another point raised is the potential language-specific natures of these patterns. Different languages might use apostrophes differently, or not at all. Consequently, this can lead to inconsistent tokenization across languages when using these regex patterns which are likely designed with English in mind.
+
+#### Matching Letters and Numbers
+
+The tokenization process then attempts to match letters and numbers using regex patterns. If it doesn’t find matches there, it falls back to another pattern.
+
+#### Punctuation Tokenization
+
+Punctuation characters are also matched by a specific group in the regex pattern. Anything that isn't a letter or a number but is punctuation will be captured by this group and tokenized separately. This is to ensure punctuation is treated as distinct tokens, which is essential for understanding the structure of sentences in natural language processing.
+
+#### Handling White Spaces
+
+Finally, there is a subtle yet important aspect of how white spaces are handled. The regex uses a negative lookahead assertion to match white spaces. It captures all the white spaces but not the final one, ensuring that when there are multiple consecutive spaces, all but the last are included in a token. 
+
+In essence, the white space becomes part of the preceding token, except for the last space which gets dropped. This prevents the tokenizer from generating tokens that consist solely of white space.
+
+Below is an example code snippet that employs regex to tokenize strings using patterns similar to those in GPT-2:
+
+```python
+import regex as re
+
+gpt2_pat = re.compile(
+    r"""'s|'t|'re|'ve|'m|'ll|'d| \p{L}+| \p{N}+| [^ \s\p{L}\p{N}]+|\s+|[^\s]+""")
+
+print(re.findall(gpt2_pat, "Hello've world123 how’s are you"))
+```
+
+The code above is using the regex pattern to tokenize the input string, with each pattern corresponding to a specific matching rule in the tokenizer.
+
+Understanding these various patterns and their implications on tokenization is critical for anyone who is working with language models such as GPT-2, as they have a significant impact on the performance and outputs of the model.

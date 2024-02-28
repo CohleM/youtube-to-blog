@@ -1,0 +1,51 @@
+### Enforcing Tokenization Boundaries with Regular Expressions
+
+As we delve into the intricacies of text processing and tokenization, it's crucial to understand the mechanics of chunking up text into manageable pieces, particularly when it comes to preventing certain merges from happening. Today, I'm going to guide you through some advanced tokenization techniques using regular expressions, or regex, to ensure that specific characters and strings of text are tokenized separately.
+
+#### Separating Letters, Numbers, and Punctuation
+
+The fundamental concept here is to avoid merging letters with numbers and punctuation, which can be vital for various text analysis tasks. Consider this regex pattern which is tailored to enforce these strict boundaries:
+
+```python
+import regex as re
+gpt2pat = re.compile(r"""['’""s\]\['\|’\ve'\m\|’\ll\|’\d\|?\P{L}+\|?\P{N}+\|?\s\|?\p{L}\p{N}+]\|s+\|(?!\s)\S+\|s+""")
+```
+
+In this pattern, `\P{L}+` matches one or more characters that are not letters, whereas `\P{N}+` matches one or more characters that are not numeric. This ensures that letters and numbers won't be merged during tokenization.
+
+For example, let's analyze the string "Hello World 123 how are you":
+
+```python
+print(re.findall(gpt2pat, "Hello world 123 how are you"))
+```
+
+The output will tokenize 'world' and '123' as separate entities because the pattern recognizes that the sequence has shifted from letters to numbers, and thus, they should not be merged. This approach maintains the integrity of the textual data by preserving distinct elements such as words and numbers.
+
+#### Understanding the Apostrophe Tokenization
+
+Apostrophes present another challenge in tokenization. The regex pattern accounts for common apostrophes using sequences like `\'ve`, `\'m`, `\'ll`, and `\'d`, which typically indicate contractions in English. However, this method is not foolproof. For instance, standard apostrophes match and separate tokens as expected. But when it comes to Unicode apostrophes, which might look similar but have different code points, the pattern might fail to recognize them, thus causing inconsistent tokenization.
+
+Take, for example, the following cases:
+
+1. Using a standard apostrophe in "You're":
+   ```python
+   print(re.findall(gpt2pat, "You're"))
+   ```
+   This would probably tokenize as expected, separating "You" and "'re" based on the predefined regex pattern.
+
+2. Using a Unicode apostrophe:
+
+   ```python
+   print(re.findall(gpt2pat, "You’re")) # Note the different apostrophe
+   ```
+   This might not match the regex pattern, which can cause "’re" to become its own token instead of being merged with "You".
+
+This inconsistency arises because the regex pattern is hardcoded to recognize specific types of apostrophes and not others.
+
+#### Case Sensitivity and Potential Improvements
+
+The creators of the regex pattern could potentially improve its robustness by adding `re.IGNORECASE` to make the pattern case-insensitive. Without this, the pattern might miss tokenizing capitalized contractions properly, as the pattern specifies lowercase letters following the apostrophe. For example:
+
+> "When they define the pattern, they say should have added `re.IGNORECASE` so `BP` merges can happen for capitalized versions of contractions."
+
+By considering the `re.IGNORECASE` option, we could ensure that variations in casing do not affect the consistency and accuracy of our tokenization process.

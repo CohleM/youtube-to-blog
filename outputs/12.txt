@@ -1,0 +1,60 @@
+### Byte Pair Encoding (BPE) Algorithm Explained
+
+Byte Pair Encoding (BPE) is a compression method that iteratively replaces the most common pair of consecutive bytes (or characters) in a sequence of data with a single, unused byte or character. This process not only compresses the data but also aids in tokenization, which is fundamental in natural language processing tasks such as those performed by models like GPT-3 and GPT-4.
+
+#### Overview of the BPE process
+
+- Start with a sequence of characters or bytes.
+- Identify the most frequent pair of characters or bytes.
+- Replace each occurrence of this pair with a new token (a byte or character not used in the original sequence).
+- Repeat the process until no frequent pairs are left or a desired vocabulary size is reached.
+
+#### Detailed Step-by-Step Transformation
+
+Here's how the BPE algorithm witnessed in the `CURRENT TEXT` and images works step by step:
+
+1. **Initialization**:
+   - Original sequence: `aaabdaaabac`
+   - Initial vocabulary: {a, b, d, c}
+
+2. **First Iteration**:
+   - Identify the most common pair: `aa`
+   - Mint a new token: `Z`
+   - Replace `aa` with `Z`: `ZabdZabac`
+   - Update vocabulary: {a, b, d, c, `Z`}
+
+   > As we've taken the sequence of 11 characters and compressed it into a sequence of 9 tokens, the new vocabulary size becomes 5.
+
+3. **Second Iteration**:
+   - Identify the next most common pair: `ab`
+   - Mint a new token: `Y`
+   - Replace `ab` with `Y`: `ZYdZYac`
+   - Update vocabulary: {a, b, d, c, `Z`, `Y`}
+
+   > Our sequence is further reduced to 7 characters, while the vocabulary expands to include 6 different elements.
+
+4. **Final Iteration**:
+   - Identify the most common pair: `ZY`
+   - Mint a new token: `X`
+   - Replace `ZY` with `X`: `XdXac`
+   - Update vocabulary: {a, b, d, c, `Z`, `Y`, `X`}
+
+   > Now we have a sequence of 5 tokens, and the vocabulary length is 7.
+
+#### Implementation and Practical Application
+
+- In practice, we begin with original data sequences and a base vocabulary size (for example, 256 for byte sequences).
+- The BPE method continually finds and replaces the common byte pairs to compress data and refine the vocabulary.
+- The newly minted tokens are appended to the vocabulary, compressing the data while allowing for efficient encoding and decoding.
+
+   ```markdown
+   Example of BPE iteratively replacing byte pairs:
+   Initial: aaabdaaabac
+   After 1st Iteration: ZabdZabac (Z=aa)
+   After 2nd Iteration: ZYdZYac (Y=ab)
+   After Final Iteration: XdXac (X=ZY)
+   ```
+
+---
+
+By employing the BPE method, we not only shorten the length of our sequences but also develop a systematic approach to encoding new sequences using the derived vocabulary and decoding them back into their original forms. The process illustrated above and visualized in the accompanying screen captures exemplifies the simplicity and efficacy of the BPE algorithm.

@@ -1,0 +1,37 @@
+### Understanding Tokenization in Machine Learning
+
+In this section, we're discussing the intricacies of tokenization, a crucial step in natural language processing (NLP) used in machine learning, particularly in the training of language models like GPT-4 and others.
+
+#### Tokenization in GPT-4
+Previously, we explored an overview of tokenization where byte-pair encoding (BPE) was used to merge individual bytes. For instance, during the training of GPT-4, the initial merge was two spaces into a single token (`token 256`). We also trained a tokenizer, using MBP, on a Wikipedia page of Taylor Swift as an example (not for personal affinity but because of its length) and obtained a similar merge order as that of GPT-4's.
+
+In the CURRENT TEXT, it's mentioned that GPT-4 merged 'I' and 'n' into 'in' (`token 259`). We also merged 'space' and 't' into 'space t' though at a different point indicating the influence of the training set on the order of merges. We suspect that GPT-4's dataset included a significant amount of Python code due to the whitespace patterns observed, which differs from the Wikipedia-based training set we used.
+
+> Training sets greatly affect the vocabulary and order of merges in tokenization.
+
+#### TikTok vs. SentencePiece
+
+As we advance beyond the TikTok tokenization method, we need to understand how other libraries operate. SentencePiece, noticeably different from TikTok, is frequently used in language models because it effectively handles both training and inference of tokenizers.
+
+##### Key Differences Between SentencePiece and TikTok:
+- **SentencePiece**: Directly works on the Unicode code points instead of UTF-8 bytes. It can train vocabularies using BPE amongst other algorithms. Crucially, for rare code points, it provides options through `character_coverage` to decide how to handle them: they can either be mapped to an unknown (UNK) token or, with `byte_fallback` enabled, be encoded into UTF-8 bytes before merging.
+- **TikTok**: Initially encodes strings to UTF-8 bytes and subsequently applies BPE on these bytes.
+
+> SentencePiece is versatile and efficient, and is used in language models by Llama and Mistral series, and is available on GitHub.
+
+#### Using SentencePiece
+To illustrate the usage of SentencePiece in a practical context, here's an example in Python code:
+
+```python
+import sentencepiece as spm
+
+# Let's create a simple text file to work with.
+with open("toy.txt", "w", encoding="utf-8") as f:
+    f.write("SentencePiece is an unsupervised text tokenizer and detokenizer mainly for Neural Network-based text generation systems like LLMs.")
+
+# The code above writes random text to 'toy.txt' for tokenization demonstration.
+```
+
+In summary, tokenization is a nuanced process affected by the algorithms and training data used. When training your own tokenizer, the results will be similar to others using the same algorithm, but with subtle variances based on the specificity of your dataset.
+
+> Understanding tokenization algorithm differences is essential for practitioners working on NLP and machine learning projects.

@@ -1,0 +1,70 @@
+### Detailed Explanation of SentencePiece Tokenization and Model Architecture
+
+In this section, I want to take you through the configuring of tokenizer settings in SentencePiece and how these settings are reflected in a Transformer model architecture. This should be particularly useful for those who are using the `sentencepiece` library by Google and want to customize their tokenization process. Let's break it down step-by-step.
+
+#### Configuring SentencePiece
+
+SentencePiece is a library that provides an unsupervised text tokenization and detokenization framework, which is widely used in the industry for its efficiency. I explored its configuration, as you can see in the shared Jupyter notebook, and found some intriguing features and quirks worth noting.
+
+Firstly, let's talk about the settings that we can tweak in SentencePiece:
+
+- **Normalization Rule**: Control character normalization, which can affect token splitting.
+- **Vocabulary Size (`vocab_size`)**: Defines the number of unique tokens in the model.
+- **Maximum Sentence Length**: Determines the length of sentences that can be processed.
+- **Byte Fallback**: Handles characters not included in the vocabulary.
+
+In the images, you can observe the `sentencepiece_model.proto` file that outlines the settings applied to the tokenizer. If you want your tokenization to be identical to a specific model, such as `llama 2`, you would configure these settings to match.
+
+> Note: For those unfamiliar with protocol buffers (protobufs), they are a method of serializing structured data, like the configuration parameters you see here.
+
+One aspect to highlight is the "historical baggage" with SentencePiece. Concepts like maximum sentence length can be confusing and potentially problematic, referred to as "foot guns." Moreover, the documentation is not as comprehensive as one would hope, causing additional challenges in understanding these settings.
+
+#### Understanding Token Embeddings in Transformer Models
+
+In the context of model architecture, specifically the GPT architecture we developed, vocabulary size plays a crucial role. Let's examine where `vocab_size` appears in the Transformer model.
+
+##### Embedding Table and Vocabulary Size
+
+The Transformer model contains a token embedding table, a two-dimensional array where the rows represent each token in the vocabulary and columns denote the associated vector. Each token has a corresponding vector that we train using backpropagation. This vector is of size `embed`, which matches the number of channels in the Transformer model. 
+
+In the code, `vocab_size` is prominently used when defining the embedding table and the positional encodings, crucial for understanding the position of each token in a sequence. 
+
+Here is a snippet of the model architecture that illustrates this:
+
+```python
+self.tok_emb = nn.Embedding(vocab_size, embed_size)  # token embedding
+self.pos_emb = nn.Parameter(torch.zeros(1, max_seq_length, embed_size))  # positional encoding
+```
+
+As you increase the `vocab_size`, the size of your token embedding table grows accordingly, demanding more memory and computation during training.
+
+#### Vocabulary Size Considerations
+
+Questions often arise about what the vocabulary size should be and how it can be increased. While I was revisiting the issue of setting `vocab_size` in greater detail, I came across several crucial points:
+
+- Larger vocabulary sizes can capture more fine-grained language nuances and require fewer subword splits.
+- However, they come at the cost of higher computational resources and may lead to sparsity issues with rare words.
+
+##### Code Example for SentencePiece Training
+
+To give an example, here is how you would configure and train a SentencePiece tokenizer in Python:
+
+```python
+import sentencepiece as spm
+
+# Define the SentencePiece options
+options = {
+    'model_prefix': 'tokenizer',  # output filename prefix
+    'vocab_size': 32000,  # desired vocabulary size
+    # more configuration options...
+}
+
+# Train the SentencePiece model
+spm.SentencePieceTrainer.train(**options)
+```
+
+In the image, there’s also a question about increasing the vocabulary size. When faced with this task, one would likely adjust the `vocab_size` parameter during the training of the tokenizer, then retrain the embedding layer in the model to accommodate the new vocabulary size.
+
+In the shared Jupyter notebook, the configuration parameters are presented in an easy-to-read format, which could be modified to fit the specific requirements of your natural language processing (NLP) project. The `vocab_size` mentioned in the block of code reflects this step.
+
+To sum up, configuring the tokenizer must be done with understanding and consideration of how it will affect the model architecture. Hopefully, this step-by-step explanation has provided clarity on these topics.

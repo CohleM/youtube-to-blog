@@ -1,0 +1,28 @@
+### Understanding Tokenization in Natural Language Processing
+
+In my exploration of natural language processing, one of the fundamental concepts I've come across is tokenization. I recently used the TikTokenizer web app, which provides a hands-on experience of how tokenization works with different types of data, such as strings and numbers.
+
+#### What is Tokenization?
+Tokenization is the process of breaking up text into individual units, called tokens. These tokens can be words, numbers, or symbols, depending on the tokenizer's rules. It's at the core of many operations in natural language processing and has profound implications for the performance of language models.
+
+#### GPT-2 Tokenizer Example
+To illustrate tokenization, I used the GPT-2 tokenizer on the TikTokenizer web app. When I input a string, such as "hello world," the tokenizer breaks it down into individual tokens. The tokens are then processed by the model for various tasks, such as language translation, text generation, or sentiment analysis.
+
+Here's a breakdown of how the GPT-2 tokenizer handles different inputs:
+
+- **String tokenization**: I noticed that the text I typed was broken into tokens with unique numerical representations. For instance, the word "tokenization" became two separate tokens: 3,642 and 1,634. Even spaces and newline characters are assigned tokens, like space being token 318. This granularity helps the model to understand and generate text.
+
+```
+Example of string tokenization:
+"hello world" -> "hello" (token 492), "world" (token 995)
+```
+
+- **Handling numbers**: Things get interesting with numbers. For example, the single number "127" is recognized as one token, but "677" is split into two tokens. This reflects how the tokenizer interprets and segments the input according to its training and the model's vocabulary.
+
+```
+Example of number tokenization:
+"127 + 677" -> "127" (token 123), "+" (token 11), "677" (token 678, 679)
+```
+
+#### Importance of Understanding Tokenization
+The way a tokenizer segments text and numbers can significantly impact the language model's understanding and performance. When working with different languages or specialized text, tokenization can become even more complex. This is why sometimes models might struggle with tasks that seem simple to us, such as spelling words correctly or performing basic arithmetic.

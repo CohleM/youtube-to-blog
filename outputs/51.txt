@@ -1,0 +1,19 @@
+### Considerations When Designing Vocabulary Size for Language Models
+
+When designing the vocabulary size for a language model, there are several considerations to ponder. It's important to find a balance in the vocabulary size; if it's too small, we risk not capturing enough of the language's nuances, but if it's too large, we may be squishing too much information into single tokens, making it harder for the model to process the information. In my experience, from what I've seen in state-of-the-art architectures today, the vocabulary size is often in the tens of thousands or around 100,000.
+
+#### Extending Vocabulary Size in Pre-trained Models
+
+Let's look into extending the vocabulary size in a pre-trained model, an approach commonly taken during fine-tuning. For instance, when modifying a GPT model for tasks like chatting, we often introduce new special tokens. These tokens help maintain the metadata and the structure of conversation objects between a user and an assistant. 
+
+Introducing a new token is perfectly feasible. To add a token, we need to resize the embedding layer of the model, adding new rows initialized with small random numbers. We also need to extend the weights inside the linear layers to calculate the probabilities for these new tokens accurately. Both operations are considered minor model surgery but can be done relatively easily. 
+
+When introducing new tokens, it's common to freeze the base model and train only the new parameters. This approach allows for the selective training of parts of the model while keeping the established parts intact. 
+
+#### Beyond Special Tokens: Gist Tokens
+
+Lastly, I'd like to highlight that the design space for introducing new tokens into a vocabulary extends far beyond just adding special tokens for functionality. For example, there's a paper that discusses an interesting concept called "gist tokens." In cases where we use language models that require very long prompts, processing can become slow due to the need to encode these lengthy prompts. 
+
+> The paper on learning to compress prompts with gist tokens suggests that, by using these tokens, which essentially summarize larger pieces of information, we can speed up the processing time. This method indicates a promising direction for optimizing language models for efficiency without sacrificing performance. 
+
+This approach is an example of the innovative ways in which the vocabulary design space is being explored to improve language model applications and illustrates that the field is ripe for further investigation and advancement.

@@ -1,0 +1,32 @@
+### Exploring Regular Expressions for Tokenization in GPT Series
+
+#### Understanding the Tokenization Problem
+In recent work with regular expressions applied to tokenization, a specific problem has been addressed: how to accurately split text into meaningful tokens. Tokenization is a fundamental step in natural language processing, and it's crucial for a system to correctly interpret spaces and characters when working with text data.
+
+#### Regex Pattern for Splitting Textual Data
+The motivation behind using a specific regex pattern is to distinguish between spaces in the text effectively. This pattern ensures that most of the spaces, except for the last one before a non-space character, are separated out. Here is a snippet of the regex pattern used:
+
+```python
+import regex as re
+
+gpt2pat = re.compile(r"[\p{L}\p{N}]+|[\s\p{L}\p{N}]+|[\s]+")
+```
+
+#### Case Study: The Impact of Extra Spaces on Tokenization
+Consider the phrase "space you" (`" space u"`). A standard tokenizer would identify `" space"` and `"u"` as separate tokens. However, when additional spaces are injected into the text, a tokenizer that does not handle this scenario adequately might produce inconsistent tokens. But the GPT-2 tokenizer, designed with this regex pattern, prunes extra white spaces so that the core token (`" space u"`) remains unchanged despite the introduction of extra spaces.
+
+#### Real-World Example: Python Code Tokenization
+A practical example is given with a fragment of Python code. The tokenizer distinctly separates various elements such as letters, numbers, white spaces, and symbols, and each category change prompts a split. Tokens remain discrete, and there are no merges, which is essential for clarity and accuracy. 
+
+For example, tokenizing the string "Hello world123 how are you!!!" using our regex pattern gives the following separated elements:
+
+```python
+print(re.findall(gpt2pat, "Hello world123 how are you!!!"))
+# Output: ['Hello', ' world', '123', ' how', ' are', ' you', '!!!']
+```
+This output demonstrates how each element is treated as a separate token with no unintended merges between them.
+
+#### OpenAI's Approach to Handling Spaces
+OpenAI's tokenizer takes this a step further. It appears that OpenAI has implemented a rule where spaces (`" "`) are always treated as separate tokens. When testing with the GPT tokenizer, you can see that spaces are preserved as individual tokens, each represented by the same token ID. Therefore, beyond the standard Byte Pair Encoding (BPE) and other chunking techniques, OpenAI has added specific rules to ensure the consistency and integrity of tokenization where spaces are concerned.
+
+> The GPT-2 tokenizer's methodology ensures that tokenization of text is robust and consistent, even when faced with complex patterns of characters and whitespace. This level of detail is vital for the accurate interpretation of text by machine learning models and ultimately contributes to more effective natural language understanding.

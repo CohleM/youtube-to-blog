@@ -1,0 +1,31 @@
+### Understanding the Complexity of Language Model Tokenization and Code Tokenization
+
+#### Language Model Tokenization Explained
+
+In discussing the intricacies of tokenization as it pertains to language models, I want to break down a complex issue that arises with different languages. When a sentence is tokenized in English, it tends to generate fewer tokens as compared to languages like Korean or Japanese. The reason behind this is that the tokenizer creates longer tokens for English, which results from the language model's training data being predominantly in English.
+
+> This difference in tokenization results in a bloated sequence length for documents in non-English languages, as text is broken up into more tokens. 
+
+These additional tokens can inflate the total number of tokens in the sequence, which affects how the transformers in language models process the data. Since transformers have a maximum context length, non-English text appears stretched out from the transformer's perspective, which can lead to issues with understanding and generating language that stays within the context window.
+
+#### Code Tokenization in Language Models
+
+Moving onto code tokenization, I observed an example provided using Python. The main point to notice was how each space in the code was tokenized into separate tokens. A series of spaces in Python code, often used for indentation, are each assigned a dedicated token, in this case, token 220.
+
+```python
+for i in range(1, 101):
+    if i % 3 == 0 and i % 5 == 0:
+        print("FizzBuzz")
+    elif i % 3 == 0:
+        print("Fizz")
+    elif i % 5 == 0:
+        print("Buzz")
+    else:
+        print(i)
+```
+
+Each individual space is a token, and when they are combined with actual words or symbols, they form a part of the sequence that the language model needs to process. This level of granularity can be wasteful and lead to inefficiencies, particularly with models like GPT-2, which are not optimized for this type of tokenization.
+
+> The tokenization of whitespace in Python code can bloat the sequence length and lead to language models running out of context space. 
+
+The effect is that language models can struggle to effectively process and generate Python code, not because of an inherent limitation with understanding code syntax, but rather because of how the tokenization process inflates the sequence with unnecessary tokens. This is an important consideration when developing and training language models to handle programming languages, as the standard tokenization method applied to natural language doesn't translate effectively to code.

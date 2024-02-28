@@ -1,0 +1,64 @@
+### Building a GPT-4 Tokenizer
+
+In the journey to build your own GPT-4 tokenizer, there are a series of steps that you could follow to understand and implement the tokenization process. Tokenization is critical because it converts raw text into a format that a language model like GPT-4 can understand—namely, a series of tokens.
+
+#### Step 1: Basic Tokenizer
+
+First, you need to create a basic tokenizer that can handle essential functions like training on text data, encoding text into tokens, and decoding tokens back into text. Here's a simple structure for the tokenizer:
+
+- `def train(self, text, vocab_size, verbose=False)`: Train the tokenizer on the provided text data up to the specified vocabulary size.
+- `def encode(self, text)`: Convert text into a sequence of tokens.
+- `def decode(self, ids)`: Translate a sequence of tokens back into human-readable text.
+
+Training your tokenizer on a specific text will allow you to create a vocabulary tailored to the content and nuances of that text. One suggested test text for this is the Wikipedia page of Taylor Swift, as it's lengthy and provides a rich vocabulary to work with.
+
+#### Step 2: Advanced Tokenizer with Byte Pair Encoding (BPE)
+
+After crafting a basic tokenizer, the next step involves advancing to a Regex-based tokenizer and merging it with Byte Pair Encoding (BPE). BPE is commonly used in natural language processing to efficiently tokenize text based on the frequency of character pairs. Here's a high-level explanation of creating a tokenizer using BPE:
+
+```python
+# Example code for building a BPE tokenizer
+import tiktoken
+
+# Obtain the base encoding using the BPE tokenizer
+enc = tiktoken.get_encoding("c1l00k_base") # GPT-4 tokenizer
+print(enc.encode("안녕하세요 🌞 (hello in Korean!)"))
+print(enc.decode(enc.encode("안녕하세요 🌞 (hello in Korean!)")) == "안녕하세요 🌞 (hello in Korean!)")
+```
+
+This code demonstrates encoding and decoding using a BPE tokenizer. You would be replacing `"c1l00k_base"` with your own trained model reference.
+
+#### BPE Visual Representation
+
+When visualizing Byte Pair Encoding, you think about how tokens are merged. In the GPT-4 case, for example, the first merge during training was two spaces into a single token. Such visual representations help understand the order and the manner of token merges that occurred during the training of the model.
+
+#### Step 3: Customize and Train Your Tokenizer
+
+After understanding the underlying principles of a BPE tokenizer, you can move on to customizing and training your own tokenizer based on your specific requirements. Tiktoken library does not come with a training function, but you can implement your own train function by referencing existing code in repositories like MBP (minbpe).
+
+Here's an example of how the code might look for training and visualizing token vocabularies:
+
+```python
+# Example code for training tokenizer and viewing token vocabularies
+# ... (training code) ...
+
+# Visualizing token vocabularies
+bpe_tokens = minbpe.train(...)
+print(bpe_tokens)
+```
+
+You would need to replace the training code with your own logic to train the tokenizer on your dataset.
+
+#### Exercise Progression and References
+
+Throughout the process, you can follow the exercise progression laid out in the MBP repository's `exercise.md` file. It breaks down the task into manageable steps, guiding you through the process. Additionally, tests and code within the repository can be referenced whenever you feel stuck or need clarification.
+
+> Repository: MBP (minbpe)
+> Exercise File: `exercise.md`
+> Code examples and tests can be found in the repository to assist in creating your own GPT-4 tokenizer.
+
+#### Visual Aids in Repository
+
+The images from the video show different screens of the repository and the exercise itself. One screenshot shows the `README.md` and various files, highlighting the minimal, clean code for the BPE algorithm used in LLM tokenization. Another image provides a glimpse of the `exercise.md` file content, specifying instructions for building your own GPT-4 Tokenizer.
+
+Please note that the specifics of the code and the tokenizer are dependent on each individual's implementation and the specific dataset used for training. The above explanation serves as a guide to understanding the process and identifying the necessary components for constructing a tokenizer for your own use.

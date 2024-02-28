@@ -1,0 +1,63 @@
+### Explaining SentencePiece Tokenization and its Options
+
+Today I'm going to dive into the intricacies of SentencePiece tokenization, a tool that is commonly used in natural language processing to prepare text data for machine learning models.
+
+#### Add Dummy Prefix
+
+Let's begin with a peculiarity I've noticed: SentencePiece appears to convert whitespace characters into bold underscore characters. While I'm not entirely certain why this visual representation is used, it leads us to a significant aspect of tokenization known as the "add dummy prefix".
+
+This option serves a very crucial function in the context of machine learning. Consider this: the word "world" on its own and "world" preceded by a space are treated as two distinct tokens by the tokenization model. This distinction means that to a machine learning model, these instances are different, despite representing the same word conceptually.
+
+```python
+# Illustrating different tokenization
+world_token = sp.encode('world')[0]          # 'world' gets a certain ID
+space_world_token = sp.encode(' world')[0]   # ' world' gets a different ID
+```
+
+To mitigate this difference, the `add_dummy_prefix=True` option is employed. What it does is pre-process your text by adding a whitespace at the beginning. So both "world" and " world" become " world" when tokenized, aligning their representations within the model.
+
+```python
+# Adding dummy prefix to treat tokens similarly
+text = "world"
+preprocessed_text = " " + text  # Adds a space before the text
+```
+
+The rationale behind this is to help the model understand that words at the beginning of a sentence and words elsewhere are related concepts.
+
+#### Visualization of Token IDs
+
+In the image provided, we see the representation of token IDs after encoding a string with non-English characters.
+
+```python
+# Encoding a multilingual string
+ids = sp.encode("hello 안녕하세요")
+print(ids)
+```
+
+This list of IDs corresponds to the internal representation of each token after the SentencePiece model has processed the string. Here's how you can decode it to fetch the actual pieces:
+
+```python
+# Decoding the token IDs to get the pieces
+pieces = [sp.id_to_piece(idx) for idx in ids]
+print(pieces)
+```
+
+#### Raw Protocol Buffer Representation
+
+In the final image, we are looking at the raw protocol buffer representation of the SentencePiece tokenizer settings. Protocol buffers are Google's language-neutral, platform-neutral, extensible mechanism for serializing structured data – think XML, but smaller, faster, and simpler.
+
+> For those interested, the protocol buffer format can be found in the sentencepiece Google repository - look for `sentencepiece_model.proto`.
+
+This representation allows us to inspect the tokenizer configurations used internally, including normalization rules, precompiled character maps, and various options such as `add_dummy_prefix`.
+
+#### Tiktokenizer Comparison
+
+Lastly, I'd like to mention Tiktokenizer, which exemplifies the impact of applying different tokenization strategies. As we can deduce from the comparison, token IDs vary greatly between "world" and "hello world" without using the add dummy prefix.
+
+However, keep in mind that Tiktokenizer merely serves as an illustrative tool, and may not directly correspond to SentencePiece's implementation details.
+
+---
+
+To summarily capture the essence, tokenization models must be carefully tailored to accurately represent text in a manner conducive to machine learning models. Understanding these nuances such as the dummy prefix is vital for effective text processing.
+
+Feel free to explore these settings further if you're aiming for a specific behavior in your tokenization process.

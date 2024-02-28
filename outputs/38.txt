@@ -1,0 +1,3 @@
+### Understanding GPT-2 Tokenization and Vocabulary
+
+In this blog section, I'm going to explain how GPT-2's tokenization process works, specifically touching on the vocabulary, the Byte Pair Encoding (BPE) merges, and the special `

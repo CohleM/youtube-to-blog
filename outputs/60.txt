@@ -1,0 +1,35 @@
+### Understanding Tokenization and Anomalous Tokens in Large Language Models
+
+In the exploration of large language models (LLMs), an interesting phenomenon has been observed related to the behavior of the model when prompted with certain tokens. Let me take a moment to walk you through the intriguing observations that were made and offer an insight into what might be occurring.
+
+#### Clustering Tokens Based on Embeddings
+
+Initially, someone decided to analyze the token embeddings—that is, the numerical representations of words or sub-word units used in language models. Token embeddings are a fundamental concept in natural language processing (NLP) as they capture the semantic meaning of the tokens.
+
+By clustering these embeddings, the researcher discovered a set of tokens that exhibited unusual properties. Some of the tokens, like "rot e stream Fame" and "solid gold Magikarp," appeared to be out of place or nonsensical in terms of their semantic meaning in the context of standard English language usage.
+
+#### Unusual Responses from the Model
+
+What was particularly fascinating was the language model's response when queried about these tokens. A simple request to repeat phrases like "solid gold Magikarp" caused the model to exhibit a range of unexpected behaviors:
+
+- **Evasion:** The model would avoid the question, with responses like stating it couldn't hear the input.
+
+- **Hallucinations:** The model might produce irrelevant or disconnected output, which is referred to as hallucinating in the context of LLMs.
+
+- **Insults and Humor:** In some cases, the model would even return insults or attempt to use strange humor when interacting with these tokens.
+
+This behavior is not only bizarre but also concerning because it deviates from the expected and intended operations of a language model, especially concerning the guidelines for safe and aligned AI.
+
+#### The Mystery of "Solid Gold Magikarp"
+
+One particular token that stands out is "solid gold Magikarp," which was identified to be a Reddit username. This discovery suggests that the strange behavior of the LLM when presented with this token might arise from its association with internet-specific content, especially content that has been used or discussed extensively on a platform like Reddit.
+
+#### Tokenization: A Possible Explanation
+
+The underpinning process possibly responsible for this anomaly is tokenization. It's a method by which text is broken down into tokens, which can be words, sub-words, or even symbols that the model uses to understand and generate language.
+
+> When the training data of an LLM includes user names or specific strings extensively discussed online, these can become part of the model's vocabulary as tokens.
+
+These tokens, when used in prompts, can cause unexpected behavior if the model has learned associations or patterns related to the token that are not typical or desired. Such cases draw attention to the complexities and nuances of training large language models and the unpredictability when the training data includes diverse and sometimes esoteric internet content.
+
+In summary, this journey into token embeddings and the erratic behavior of LLMs with certain tokens reveals a layer of complexity within AI language models. It underscores the importance of understanding and monitoring the input data used for training such models, to avoid inadvertent incorporation of tokens that can lead to undesired or misaligned behaviors.

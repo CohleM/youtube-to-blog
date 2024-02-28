@@ -1,0 +1,60 @@
+### Understanding GPT-2 and GPT-4 Tokenization with OpenAI's TikToken Library
+
+Welcome to our exploration of text tokenization with OpenAI's models, specifically GPT-2 and GPT-4. If you're unfamiliar, tokenization is a fundamental pre-processing step in natural language processing where text is broken down into tokens, which could be words, characters, or subwords. This allows machine learning models to better understand and generate human language.
+
+#### Tokenization in GPT-2
+OpenAI hasn't been completely transparent about the rules and training details for their GPT-2 tokenizer. From the information available, we know there were some specific techniques used. For example, spaces in the text are not merged during tokenization—they remain independent, each being represented by token 220. The training code for GPT-2's tokenizer hasn't been released, meaning we can't replicate the exact process used by OpenAI; we can only infer from what has been shared.
+
+#### Exploring the Released Inference Code
+The code we do have is for inference, essentially taking pre-determined merges and applying them to new text. Below is a Python snippet, although not the actual code from OpenAI, which demonstrates a regular expression (`regex`) pattern used to split a given string into tokens:
+
+```python
+import regex as re
+
+gpt2pat = re.compile(r"""['s't'r'e've'm'll'd'?[pLl+]?[pnNt+]?[s\s]?[pLl{pNn}+]+[s+(?!\)])|s+'\s+""")
+
+print(re.findall(gpt2pat, "Hello've world123 how's are you!!?"))
+```
+
+This will match patterns in text strings that align with GPT-2's way of breaking down text.
+
+#### GPT-4's Approach to Tokenization
+Moving on to GPT-4, there have been some changes. One notable difference is how whitespace is handled. In GPT-4, white spaces are merged, an adjustment from how GPT-2 operates. This change reflects the altered regular expressions used for splitting text into tokens.
+
+To see this in action, there's the TikToken library provided by OpenAI which you can use as shown:
+
+```python
+import tiktoken
+
+# For GPT-2 (does not merge spaces):
+enc = tiktoken.get_encoding("gpt2")
+print(enc.encode(" hello world!!!"))
+
+# For GPT-4 (merges spaces):
+enc = tiktoken.get_encoding("c100k_base")
+print(enc.encode(" hello world!!!"))
+```
+
+Here, GPT-2 will keep spaces as individual tokens, whereas GPT-4 will merge them. The output below demonstrates the token sequences produced for the same piece of text:
+
+For GPT-2:
+```
+[220, 262, 220, 24748, 220, 1917, 9945, 220, 10185]
+```
+
+For GPT-4:
+```
+[262, 24748, 1917, 12340]
+```
+
+You'll notice the absence of '220', indicating spaces are now merged in GPT-4.
+
+#### Understanding Changes in Tokenization Patterns
+To understand the regex patterns used by the GPT-4 tokenizer, you can refer to the TikToken library's codebase, specifically the file at `TikToken/tiktoken_x_openai/public`. This houses the definitions for various tokenizers that OpenAI has made publicly available. Here is where you'll find the new patterns for GPT-4 which lead to different tokenization results when compared to GPT-2.
+
+> "The changes to tokenization patterns hint at OpenAI's continuous efforts to refine how their models understand and generate human language."
+
+#### Practical Examples
+The images provided indicate the practical use of the `regex` library in Python to match patterns specified by the regular expression in GPT-2. This reveals how actual text is chunked into tokens and showcases an example of using the TikToken library for tokenizing text with respect to different models (GPT-2 vs GPT-4).
+
+In summary, tokenization plays a pivotal role in how language models process text, with different models and versions applying unique rules and techniques. Exploring how these models behave helps us better understand the intricacies of natural language processing and machine learning in text generation tasks.

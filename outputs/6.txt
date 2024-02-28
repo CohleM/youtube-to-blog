@@ -1,0 +1,39 @@
+### Exploring Tokenization in Transformers: GPT-2 vs GPT-4
+
+In my exploration of tokenization within Transformer models, particularly focusing on the differences between GPT-2 and GPT-4 tokenization, I've stumbled upon some key insights that I'd love to share with you all. This concept can get a bit intricate, but I'll break it down step-by-step for clarity.
+
+#### Understanding Tokenization in GPT Models
+
+Initially, I had been looking into how GPT-2 tokenizes text and noticed that it was quite wasteful in terms of token space. Tokenization is the process of converting text into tokens—small pieces that the Transformer model can understand. The efficiency of this process can greatly impact the performance of the model.
+
+#### Tokenizing Python Code: GPT-2 Limitations
+
+When tokenizing Python code with GPT-2, indentations and white spaces—essential parts of Python syntax—are turned into multiple tokens, leading to a large number of tokens for a relatively small string of code. This inefficiency means that the context length of the sequence (the amount of text that the model can consider at once) is quickly consumed, impacting the model's ability to understand and generate code effectively.
+
+#### GPT-4's Improved Tokenization
+
+Shifting to GPT-4's tokenizer, I immediately noticed a reduction in token count for the same string of Python code. Where GPT-2's tokenizer produced a token count of 300, GPT-4's `CL 100K base` tokenizer cut it down to just 185. This means that GPT-4's tokenizer is roughly twice as efficient at compressing text into tokens.
+
+#### Advantages of Denser Token Input
+
+With GPT-4, we effectively double the context we can see since each token in the Transformer has a finite number of tokens it pays attention to. Thus, having a denser input allows the Transformer to predict the next token based on a larger context. However, there's a balance to strike as increasing the number of tokens disproportionately can also lead to inefficiencies.
+
+> As an important note, GPT-4's tokenizer makes a substantial improvement in handling whitespace in Python code. For example, it represents four spaces with a single token, greatly enhancing efficiency. This was a deliberate choice by OpenAI to optimize for programming languages like Python where whitespace is syntactically significant.
+
+#### Example of Tokenization Differences
+
+To illustrate, here's a coding example from the images showing how the tokenization differs between the models:
+
+```python
+for i in range(1, 10):
+    if i % 3 == 0 and i % 5 == 0:
+        print("FizzBuzz")
+    elif i % 3 == 0:
+        print("Fizz")
+    elif i % 5 == 0:
+        print("Buzz")
+    else:
+        print(i)
+```
+
+The tokenized output in the image, while not explicitly shown in the text, would reveal that GPT-4's tokenizer aggregates spaces more effectively, thereby using fewer tokens to represent the same amount of code. In conclusion, GPT-4's tokenizer shows marked improvement in handling code, thereby enabling better performance in models where conserving context is crucial.

@@ -1,0 +1,50 @@
+### Understanding SentencePiece Tokenization and Vocabulary
+
+When working with natural language processing (NLP), tokenization, which refers to dividing raw text into smaller units like words or subwords, is an essential step. In my explorations, I recently stumbled upon the SentencePiece library and its intriguing methodology. Let's delve into the specifics of how SentencePiece tokenizes and represents its vocabulary.
+
+#### Breaking Down SentencePiece's Vocabulary Order
+
+Firstly, SentencePiece starts with a list of special tokens. In the vocabulary I trained, the first token is `<unk>`, representing an unknown word or out-of-vocabulary token; this is followed by `<s>` and `</s>` for the beginning and end of a sequence, respectively. I also noticed a padding token `pad_id` which was set to negative one (`pad_id: -1`), indicating that I chose not to use a specific padding ID.
+
+Here's the excerpt from the training code and resulting vocabulary output:
+```python
+spm.SentencePieceTrainer.train(**options)
+sp = spm.SentencePieceProcessor()
+sp.load('tok400.model')
+vocab = [[sp.id_to_piece(idx), idx] for idx in range(sp.get_piece_size())]
+```
+
+In the generated vocabulary list, as seen in the images, the first few tokens are special tokens followed by individual byte tokens. This configuration was the result of turning on byte fallback in SentencePiece (`byte_fallback=True`). Consequently, 256 byte tokens were listed with their unique IDs.
+
+#### Byte Fallback and Character Coverage
+
+Byte fallback is a feature that SentencePiece utilizes. If enabled, it allows the system to revert to byte-level representation of the text. This ensures that even if a particular word or character isn't in the model's vocabulary, the tokenizer can still encode it using byte tokens.
+
+> The character coverage setting determines which characters are included in the vocabulary. Rare characters occurring only once in a large corpus might be omitted to focus on more common character sequences.
+
+#### Interpreting Merge Tokens and Code Points
+
+After the byte tokens, the merges are displayed. However, the vocabulary only shows the parent nodes of these merges, not the children or merged pairs.
+
+The final part of the vocabulary consists of the individual tokens and their corresponding IDs, typically representing the more frequent sequences found in the training text. These are the code points or unique identifiers for each character or subword.
+
+#### Encoding and Decoding With SentencePiece
+
+With the vocabulary in place, we can encode text into token IDs and decode from token IDs back to the original text. Here, I encoded the phrase "hello 안녕하세요," resulting in a series of token IDs. The decoding process then translates these IDs back into corresponding pieces of text.
+
+```python
+ids = sp.encode("hello 안녕하세요!")
+print(ids)  # Output: Token IDs
+
+print([sp.id_to_piece(idx) for idx in ids])  # Output: Decoded pieces
+```
+
+#### Observations from the Encoding Process
+
+While decoding the token IDs, I noticed a few things:
+- Some individual characters like 'hello' are tokenized as they are.
+- Specialized tokens for Korean characters are also visible, as a result of the model encountering these characters in the training set.
+
+Each ID corresponds to a particular token, revealing the inner workings of this SentencePiece model. The encoding and decoding showcase how the model handles different languages and scripts, demonstrating its versatility.
+
+By understanding the structure and ordering of the vocabulary, as well as the functions of byte fallback and character coverage, we can better comprehend how SentencePiece prepares data for various NLP tasks.

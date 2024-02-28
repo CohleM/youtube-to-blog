@@ -1,0 +1,50 @@
+```markdown
+### Understanding Tokenization in Language Models
+
+In the realm of natural language processing, tokenization is a foundational step that breaks down text into more manageable pieces, called tokens. These tokens then serve as the input for language models like GPT (Generative Pre-trained Transformer). Let me take you through some key points regarding tokenization, its challenges, and recommendations based on the shared content and discussion.
+
+#### Reusing GPT-4 Tokens and Efficient Libraries
+
+When implementing tokenization in your applications, reusing pre-trained tokens, such as those from GPT-4, is advised when possible. Libraries like `tokenizers` from Hugging Face are recommended due to their efficiency in handling Byte-Pair Encoding (BPE) for tokenization. These libraries take care of various complexities and offer an already optimized set of tokens and vocabulary which can save you a significant amount of time and resources.
+
+> If you can reuse the GPT-4 tokens and the vocabulary in your application, consider using the `tokenizers` library from Hugging Face for Byte-Pair Encoding (BPE) tokenization.
+
+#### The Challenge with SentencePiece
+
+If there's a need to train your own vocabulary, the tool often mentioned is SentencePiece. However, it's important to handle this with caution:
+
+- SentencePiece has a fallback mechanism for bytes that isn't preferred.
+- It performs BPE operations on Unicode points, which is deemed suboptimal.
+- The software has numerous settings, which can be easily misconfigured, leading to errors such as cropping sentences inadvertently.
+
+To avoid these issues, one should either directly replicate settings from trusted sources like what Meta has implemented or spend ample time examining hyperparameters and the SentencePiece codebase to ensure correct configurations.
+
+> Be very cautious with SentencePiece settings. Try to copy configurations from reputable implementations or meticulously review hyperparameters and code to avoid misconfiguration.
+
+#### Anticipating MBPE: A Python Implementation
+
+MBPE, or Multilingual BPE, is an implementation that is intended to refine the concept of BPE. While it exists currently, it's implemented in Python and hasn't reached optimal efficiency just yet. Ideally, the goal is to have a tokenization system similar to `tokenizers` but with the capability of training new tokens, which isn't currently available.
+
+> A promising avenue is to wait for MBPE to become more efficient or work towards developing training capabilities akin to `tokenizers`.
+
+#### Final Recommendations for Tokenization
+
+Tokenization is not without its issues. There are potential security and safety concerns to be mindful of when processing text data. Here are some final recommendations tailored for dealing with tokenization:
+
+1. Do not ignore the complexities of tokenization. It has numerous "sharp edges" and can lead to both security and safety issues.
+2. Removing the need for tokenization in Language Models (LLMs) would bring "eternal glory," though it is a challenging goal.
+3. In your own applications:
+   - Reuse GPT-4 tokens and the `tokenizers` library if applicable.
+   - Train your own vocabulary with caution and consider using BPE with SentencePiece, but be diligent with settings.
+   - Aim to switch to MBPE once it becomes as efficient as BPE with SentencePiece.
+
+Moving forward, I may delve into a more advanced and detailed discussion on tokenization. But for now, let's switch gears and briefly explore OpenAI's implementation of GPT-2 encoding and continue to uncover more about the tokenization process.
+
+#### Next Steps: Exploring GPT-2 Encoding with OpenAI
+
+In the next section, I aim to walk you through OpenAI's code for GPT-2 encoding. We will dive into the specifics of how the encoding works, and I will explain individual components, such as what a 'spous' layer might entail in this context.
+
+Stay tuned as we continue to unravel the intricacies of tokenization and encoding in large-scale language models.
+```
+
+In the accompanying image, we see a Jupyter notebook which seems to be covering the topic of vocabulary size in language models. There are a series of questions and answers, as well as "Final recommendations" that touch upon topics like tokenization safety and efficiency. The notebook is likely part of a tutorial or informational session on tokenization in natural language processing.

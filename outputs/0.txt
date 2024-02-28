@@ -1,0 +1,93 @@
+### Understanding Tokenization in Large Language Models
+
+As I delve into the complexities of tokenization in the context of large language models, I'm eager to share my insights and clarify this intricate process. Tokenization, despite being my least favorite aspect of working with these models, is essential for comprehension due to the subtleties and possible pitfalls it includes.
+
+#### What is Tokenization?
+
+Tokenization is a preprocessing step used to convert text into a format that a language model can understand and process. Essentially, it involves breaking down a string of text into smaller pieces, often called tokens, which can then be fed into a machine learning model. 
+
+#### Character-Level Tokenization: An Example with Shakespeare's Text
+
+To exemplify, let's take a character-level tokenization approach similar to what I previously demonstrated when building GPT from scratch. In that scenario, we used a dataset consisting of Shakespeare's works, which, initially, is just one massive string of text in Python. The goal was to break down this text to be supplied to a language model.
+
+To achieve character-level tokenization, we:
+
+1. **Created a Vocabulary:**
+   Identified all the unique characters in the text to form our vocabulary. 
+
+```python
+chars = sorted(list(set(text)))
+vocab_size = len(chars)
+print('Vocab size:', vocab_size)
+```
+
+2. **Developed a Lookup Table:**
+   Assigned each character a unique integer to create a mapping, which allows us to convert any given string into a sequence of these integers (tokens).
+
+```python
+stoi = { ch:i for i, ch in enumerate(chars) }
+itos = { i:ch for ch, i in stoi.items() }
+```
+
+3. **Tokenized Text:**
+   Converted a sample string like "Hi there" into a sequence of tokens using our mapping.
+
+```python
+encode = lambda s: [stoi[c] for c in s]
+print(encode("Hi there"))
+```
+
+This would output a sequence of tokens corresponding to each character in the string.
+
+4. **Prepared Data for the Model:**
+   Transformed the sequence of tokens into a format suitable for the training model. Using PyTorch, we converted the sequence into a tensor, which is the input form expected by GPT.
+
+```python
+import torch
+data = torch.tensor([encode(c) for c in text], dtype=torch.long)
+```
+
+#### Byte Pair Encoding (BPE): Advancing Beyond Characters
+
+While character-level tokenization is straightforward, it's not the most efficient for larger texts or more sophisticated language models. That's where algorithms like Byte Pair Encoding (BPE) come in, offering a more nuanced way to tokenize text. With BPE, common pairs of characters (byte pairs) are iteratively merged to form new tokens, which can represent more frequent subwords or even whole words.
+
+#### GPT-2 Encoder
+
+In the more advanced language model GPT-2, tokenization employs BPE and requires specific vocabulary (`vocab.bpe`) and encoder (`encoder.json`) files.
+
+> **Reference the GPT-2 `encoder.py` Download the `vocab.bpe` and `encoder.json` files.**
+
+To utilize these files in Python:
+
+```python
+import os, json
+
+with open('encoder.json', 'r') as f:
+    encoder = json.load(f)  # equivalent to our "vocab"
+
+with open('vocab.bpe', 'r', encoding='utf-8') as f:
+    bpe_data = f.read()
+bpe_merges = [tuple(merge_str.split()) for merge_str in bpe_data.split('\n')[1:-1]]
+# equivalent to our "merges"
+```
+
+The `encoder.json` file functions similarly to our initial character-to-integer mapping, while `vocab.bpe` holds the rules for BPE mergers, which we use to tokenize strings at the subword level.
+
+#### Embedding Tokens into Language Models
+
+Once tokenized, the next step is to input these tokens into the language model. This is achieved using an embedding table. For example, if we have 65 unique tokens, the embedding table will hold 65 rows, each representing a vector for a respective token. Feeding a language model a token is essentially looking up the integer's corresponding row in the embedding table, which retrieves a vector that the model can process.
+
+```python
+# Imagine an embedding table with 65 rows for 65 unique tokens
+embedding_table = ...
+
+# We use the tokenizer to convert a string into a sequence of tokens
+sequence_of_tokens = encode("Some text here")
+
+# Each token corresponds to a row in the embedding table
+embedded_sequence = [embedding_table[token] for token in sequence_of_tokens]
+```
+
+#### Conclusion
+
+By discussing tokenization, I've outlined its crucial role in training large language models—starting from the simplified character-level method up to more complex methods such as BPE used in models like GPT-2. It's essential to understand that although tokenization might seem mundane, it fundamentally shapes a model's ability to understand and generate human-like text.

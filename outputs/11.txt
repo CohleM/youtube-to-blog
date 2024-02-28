@@ -1,0 +1,40 @@
+### Understanding Transformer Architecture Modifications and Byte Pair Encoding
+
+In my exploration of enhancing language models, I've stumbled upon a complex topic regarding the structure of transformers and a technique called Byte Pair Encoding (BPE). To understand these concepts, let's break them down step by step.
+
+#### Scaling Issues with Transformer Architectures
+
+Transformers are a type of neural network architecture that have revolutionized the field of natural language processing. However, they come with some limitations. One such limitation is their inefficiency in handling very long sequences, like raw byte sequences. This inefficiency is due to the attention mechanism used in transformers, which becomes extremely resource-intensive as the sequence length increases.
+
+To address this, a hierarchical approach to restructuring the Transformer architecture has been proposed. I learned about this from a paper released in Summer last year titled "MEGABYTE: Predicting Million-byte Sequences with Multiscale Transformers", which explores this very problem.
+
+> The paper suggests a solution where raw bytes could be fed directly into the models by reconfiguring the transformer into a multi-scale architecture. It uses a _local model_ for short segments and a _global model_ to integrate information across these segments (`MEGABYTE`).
+
+#### Byte Pair Encoding (BPE) as a Solution
+
+Since we cannot currently process raw byte sequences efficiently, we need to reduce the sequence length before we can feed it into language models. This is where the Byte Pair Encoding algorithm comes into play. BPE is a form of data compression that helps us condense these sequences, effectively reducing their length.
+
+BPE is not complicated, and its basic principle is straightforward:
+
+1. Start with a large sequence of tokens (like a very long string of characters or bytes).
+2. Identify the most frequently occurring pair of tokens in this sequence.
+3. Combine this pair into a new single token that is added to the vocabulary.
+4. Replace all instances of the identified pair in the sequence with this new token.
+
+This process is repeated iteratively until we have reduced the sequence to a preferred length or until no more compression can be achieved without losing meaning.
+
+For an example, consider a sequence with a small vocabulary consisting of the tokens `a, b, c, d`. If the pair `aa` occurs most frequently, we can create a new token `Z` and replace all occurrences of `aa` with `Z`. This way, we effectively shorten the sequence and add a new element to our vocabulary.
+
+#### Practical Example in Python
+
+In today's session, I actually demonstrated this process using Python. Here's an excerpt of the code that provides insight into the encoding of strings:
+
+```python
+list("안녕하세요 👋 (hello in Korean)!".encode("utf-8"))
+```
+
+The above line of code, when executed in a Python environment, would give us the UTF-8 byte representation of the Korean greeting "안녕하세요" followed by a waving hand emoji and "hello in Korean!" in English. This is a step prior to any compression where we see how strings are represented as bytes in UTF-8 encoding, which would then be candidates for compression using BPE.
+
+#### Moving Forward
+
+In my exploration of these topics, I've realized that while tokenization-free, autoregressive sequence modeling at scale is the aim, we haven't fully proven this approach on a large scale across many different applications. However, there's hope, and the research around the subject is ongoing. I'm eager to see future advancements that would allow us to directly feed byte streams into our models without the need for complex preprocessing techniques like BPE.

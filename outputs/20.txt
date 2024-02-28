@@ -1,0 +1,47 @@
+### Understanding Tokenization and Encoding in Large Language Models
+
+As we continue to explore the intricacies of large language models (LLMs), let's delve into how tokenization affects the training process and how encoding and decoding are achieved once a tokenizer is in place.
+
+#### Tokenization: A Separate Preprocessing Stage
+
+Tokenization is a preliminary stage, distinct from the LLM itself. It involves creating a vocabulary for the model to understand various forms of text, including multiple languages and even code. This separate stage requires its training set of texts.
+
+> The amount of different languages and code in your tokenizer training set will determine the number of merges made during tokenization. More merges mean a denser token space.
+
+For example, if there's a significant amount of Japanese text in the training set, more Japanese tokens will get merged. This results in shorter sequences for Japanese text, which is advantageous for the LLM, since it operates within a finite context length in token space.
+
+#### Encoding and Decoding Tokens
+
+Now that we have trained a tokenizer and established the merges, we need to implement encoding and decoding to interpret the text data.
+
+##### Decoding Process Overview
+
+In decoding, we convert a sequence of token IDs back into human-readable text. This sequence is represented by a list of integers, each corresponding to a specific token in the vocabulary we created during tokenization.
+
+##### Implementing the Decoding Function
+
+Here is where we can exercise our programming skills by implementing the decoding function. The aim is to take a list of integer token IDs and translate it into a Python string, effectively reversing the tokenization process. For those interested, trying to write your own decoding function can be a rewarding challenge.
+
+##### Sample Code for Decoding
+
+The image outlines the beginning steps in crafting a decoding function. Let's build on that with an example in Python:
+
+```python
+def decode(ids):
+    # Given ids (list of integers), return Python string
+    vocab = {token_id: bytes_object for token_id, bytes_object in enumerate(raw_tokens)}
+    # Adding subsequent merges...
+    return ''.join(vocab[id] for id in ids)
+```
+
+In this sample code, we initialize a dictionary named `vocab` that maps token IDs to their corresponding bytes objects. The bytes objects represent tokens that are understood by the model.
+
+> It's essential to match the original bytes order and structure that the tokenizer would create to ensure accurate decoding.
+
+The decoding function then assembles the text by combining the bytes objects for each token ID in the provided sequence.
+
+#### Takeaways and Next Steps
+
+Understanding the tokenizer's impact on the LLM's training and operation is crucial. By carefully choosing the training set for the tokenizer, we influence the model's capability to process various languages effectively.
+
+In the next steps, we would explore how encoding works, similar to decoding but in reverse, and we'd implement the encoding function, enabling us to take raw text and convert it into a usable token sequence for the LLM to process.

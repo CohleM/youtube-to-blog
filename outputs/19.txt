@@ -1,0 +1,52 @@
+### Training the Tokenizer for Natural Language Processing
+
+As I delve into the complex world of Natural Language Processing (NLP), one of the crucial components I need to understand is the tokenizer. It's essential to recognize that the tokenizer is a distinct entity from the language model itself. The role of the tokenizer is to preprocess text before it is fed into a Large Language Model (LLM) for further processing.
+
+#### Tokenizer Training Set and Preprocessing
+
+The tokenizer requires its own dedicated training set, which could potentially differ from the training set used by the LLM. On this training set, a tokenizer-specific algorithm is applied to learn the vocabulary necessary for encoding and decoding text. It's worth noting that this training phase happens only once at the beginning as a preprocessing step.
+
+> "The tokenizer will have its own training set just like a large language model has a potentially different training set."
+
+#### Byte Pair Encoding (BPE) Algorithm
+
+An algorithm known as Byte Pair Encoding (BPE) is employed to train the tokenizer. BPE iteratively merges the most frequent pairs of bytes (or characters) in the training corpus to form new tokens, thereby building a vocabulary that reflects the dataset's character and subword frequency.
+
+In practice, you will encounter a piece of code like the one seen in the provided images that illustrates the utilization of BPE:
+
+```python
+# Example code for Byte Pair Encoding
+# Note: This is not a real code snippet, but a representation based on the context provided.
+tokens = ... # some list of initial tokens
+ids = ... # corresponding list of token IDs post BPE
+
+# Perform BPE on the training data to create vocabulary
+while not done:
+    pair_to_merge = find_most_frequent_pair(tokens)
+    tokens = merge_pair_in_tokens(pair_to_merge, tokens)
+
+# Output the size of vocabulary and compression stats
+print(f"tokens length: {len(tokens)}")
+print(f"ids length: {len(ids)}")
+print(f"compression ratio: {len(tokens) / len(ids):.2f}X")
+```
+
+#### Encoding and Decoding
+
+Once the tokenizer has been trained and the vocabulary is established, it can convert raw text (a sequence of Unicode code points) into token sequences and also perform the reverse operation. Decoding is the process of translating token sequences back into human-readable text.
+
+#### Interaction with the Language Model
+
+After we have trained the tokenizer and prepared the tokens, we can begin training the language model. However, it must be underscored that the training datasets for the tokenizer and the LLM can differ. The tokenizer's role is to translate all the language model's training data into tokens. Consequently, the raw text can be discarded, storing only the token sequences for the LLM to ingest.
+   
+> "The language model is going to be trained as a step two afterwards."
+
+#### In Summary
+
+Tokenization is a vital preprocessing step in which a tokenizer learns to translate between raw text and token sequences using algorithms like BPE. It is an independent stage with its own training set and mechanisms, not to be conflated with the subsequent language model training.
+
+```markdown
+Note, the Tokenizer is a completely separate, independent module from the LLM. It has its own training dataset of text (which could be different from that of the LLM), on which you train the vocabulary using the Byte Pair Encoding (BPE) algorithm. It then translates back and forth between raw text and sequences of tokens. The LLM later only ever sees the tokens and never directly deals with any text.
+```
+
+Through these methods and processes, we create an efficient bridge between human language and computational interpretation, enabling advancements in NLP.

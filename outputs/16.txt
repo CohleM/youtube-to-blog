@@ -1,0 +1,68 @@
+### Building an Iterative Tokenizer with Byte Pair Encoding (BPE)
+
+In our quest to develop an efficient tokenizer using Byte Pair Encoding (BPE), we've reached a stage where we iteratively merge the most common byte pairs into new, higher-level tokens. Let's break down the complex process involved in creating such a tokenizer into more manageable steps.
+
+#### Identifying and Replacing Top Pairs
+
+First, we aim to identify the most frequently occurring pair of bytes in our data. We have a function that can accomplish this. With the discovered pair, we proceed to replace it with a new token. For instance, in our example, the top pair was identified as `(101, 32)`. We choose a new token ID, such as `256`, for the replacement.
+
+#### Merge Function
+
+The `merge` function is essential for the BPE approach. It takes a list of byte IDs (`ids`), a target pair (`pair`), and a new token index (`idx`). It processes the list to find occurrences of the target pair and then replaces them with the new token.
+
+Here's the code snippet of the `merge` function that executes this logic:
+
+```python
+def merge(ids, pair, idx):
+    newids = []
+    i = 0
+    while i < len(ids):
+        if i < len(ids) - 1 and ids[i] == pair[0] and ids[i+1] == pair[1]:
+            newids.append(idx)
+            i += 2
+        else:
+            newids.append(ids[i])
+            i += 1
+    return newids
+```
+
+In the code, `newids` is the resulting list after replacement. We iterate through the original list (`ids`), looking for pairs. If a match is found, we append the new token index (`idx`) instead of the pair and skip the next ID by incrementing `i` by 2. If there's no match, we simply copy the current byte ID to `newids`.
+
+To illustrate, given a toy example list `[5, 6, 6, 7, 9, 11]` and the target pair `(6, 7)` to be replaced by token `99`, we end up with `[5, 6, 99, 9, 11]` after applying the `merge` function.
+
+#### Applying the Merge Process and Reducing Token List Length
+
+Upon executing the `merge` function with our actual data, we see that the list of tokens reduces in length. For example, our length dropped from 616 tokens to 596 after replacing 20 occurrences of the pair `(101, 32)` with token `256`. This step confirms the successful merger of the pair within our token list.
+
+#### Ensuring Correct Token Replacement
+
+We perform a double-check to confirm that there are no occurrences of the original pair left in the token list. Using Python, you might search for the pair within the list by:
+
+```python
+print(256 in tokens)  # True, this confirms replacements have occurred.
+print((101, 32) in tokens)  # False, confirming the pair has been merged.
+```
+
+#### Iterative Merging with a While Loop
+
+To fully utilize Byte Pair Encoding, we iterate this process. We continue to find common pairs and merge them into single tokens. This iterative process can continue as many times as desired, controlled by a hyperparameter that essentially defines the size of the resulting vocabulary.
+
+> As an example, GPT-4 uses roughly 100,000 tokens, which serves as an indication of a reasonable vocabulary size for a large language model.
+
+#### Processing Larger Text for Better Statistics
+
+Finally, to improve the statistical significance of our merge operations, we use larger text samples. This allows us to generate more accurate byte pair frequencies and thus make more informed merges. We stretch a full blog post into a single line and encode it into bytes using UTF-8.
+
+Here’s how the process works:
+
+```python
+# Encoding the raw text to bytes
+encoded_text = raw_text.encode('utf-8')
+
+# Converting the bytes to a list of integers
+byte_ids = list(encoded_text)
+```
+
+By doing this, we ensure that our tokenizer learns from a more representative sample of text, easing the next steps of our tokenization process.
+
+In my next steps, I will incorporate these insights into crafting a `while` loop that implements the BPE process, refining the vocabulary iteratively to optimize the tokenization for any given corpus.

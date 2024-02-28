@@ -1,0 +1,40 @@
+### Understanding Tokenization with SentencePiece
+
+Tokenization is a fundamental step in processing natural language for machine learning models. It involves breaking down text into smaller units called tokens. I've been experimenting with a tokenization library called SentencePiece, and I'd like to share my findings and what I've learned from applying it to various texts, including those with characters outside of its training set.
+
+#### Encoding with SentencePiece and Out-of-Vocabulary Characters
+
+First off, SentencePiece can tokenize text into tokens and assign each token an ID. These IDs represent the different pieces of text (words or subwords), which a model can process further. While tokenizing English text worked seamlessly, something interesting happened when I included Korean characters:
+
+```python
+ids = sp.encode("hello 안녕하세요!")
+print(ids)
+# [362, 378, 361, 372, 358, 362, 239, 152, 139, 238, 136, 152, 240, 152, 155, 239, 135, 187, 239, 157, 151]
+```
+
+Since the Korean characters weren't part of the training set for the SentencePiece model, it encountered unfamiliar code points. Ordinarily, without a corresponding token, these characters would be unidentified (unknown tokens). However, since I set `byte_fallback` to `true`, the library didn't stop at the unknown tokens. Instead, it defaulted to encoding these characters in UTF-8 bytes, representing each byte with a special token in the vocabulary.
+
+> **Note**: The UTF-8 encoding results in a sequence that is shifted due to the special tokens assigned earlier ID numbers.
+
+#### The Impact of byte_fallback Setting
+
+Curiosity led me to toggle the `byte_fallback` flag to `false`. By doing so, lengthy merges occurred because we weren't occupying the vocabulary space with byte-level tokens anymore. When re-encoding the same text:
+
+```python
+# With byte_fallback set to False
+ids = sp.encode("hello 안녕하세요!")
+print(ids)
+# [0] - with byte_fallback false, unknown characters map to the <unk> token, ID 0
+```
+
+The entire string was mapped to a single `<unk>` token, ID 0. It's important to understand that this `<unk>` token would feed into a language model. The language model might struggle with this because it means that various rare or unrecognized elements get lumped together, a property we typically want to avoid.
+
+#### Decoding Individual Tokens and Spaces
+
+While decoding individual tokens, SentencePiece showed that spaces turn into a specific token denoted by bold underline in their system. This is important to note as spaces are a significant element in tokenization and must be accounted for appropriately in the encoded sequence.
+
+#### Visualizing the Tokenization Process
+
+Looking at the screenshots provided, it's clear how SentencePiece tokenizes and encodes the input text into tokens and how toggling certain settings can drastically change the outcome of this process.
+
+By sharing this experiment, my aim is to demystify the tokenization step and the intricacies involved when dealing with various languages and character sets. SentencePiece is a powerful tool that offers flexibility and a nuanced approach to handling out-of-vocabulary characters, which is crucial for building robust language models.

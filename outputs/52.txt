@@ -1,0 +1,34 @@
+### Gist Tokens: A Parameter-Efficient Fine-Tuning Technique
+
+Today, I'm exploring an intriguing concept in the field of natural language processing and machine learning called "gist tokens." This technique was introduced in a paper I recently came across, which discusses the complications of dealing with very long prompts in language models. To make things clear, let's break down the concept step by step.
+
+#### The Problem with Long Prompts
+When using language models like GPT (Generative Pre-trained Transformer), long prompts are common. However, they can slow down the processing since encoding and attending over these long sequences is computationally heavy. Imagine having to process an entire essay each time you want a model to generate a continuation!
+
+#### Introducing Gist Tokens
+To address this, the paper presents a novel compression technique that involves the creation of new tokens—named "gist tokens." Here's how it works:
+
+1. **Token Distillation**: Instead of using the entire long prompt, a few gist tokens are created.
+2. **Training through Distillation**: The model is kept frozen, and only the embeddings (representations) of these new tokens are trained.
+3. **Optimization**: The training optimizes these token embeddings so that the language model's behavior with the gist tokens matches the behavior it exhibited with the long prompt.
+
+#### The Benefits
+By using gist tokens, we effectively compress a lengthy prompt into a shorter sequence of tokens without sacrificing performance. This enables almost identical performance with significant reductions in computation.
+
+#### Practical Application
+During test time, the original long prompt can be swapped out for these trained gist tokens, making the process much faster and efficient. The key insight here is that we are not changing the model or training any new parameters except for these token embeddings.
+
+#### Extending Beyond Text
+Another area of interest is how Transformers can be adapted to handle different modes of input, such as images, videos, and audio. Traditionally, Transformers were designed for text, but the need to process multiple types of data is becoming more prevalent.
+
+The approach so far has not been to alter the fundamental architecture of Transformers. Instead, an adaptation involves tokenizing non-text input domains in a manner that the Transformer can understand them as if they were text tokens.
+
+> For instance, there is research on tokenizing images into sequences of integers, effectively allowing a Transformer to process visual information by using its native text-processing capabilities.
+
+#### Code Understanding
+In one of the images, we see Python code related to a `GPTLanguageModel`. The section highlighted in the image is crucial as it shows the creation of token embeddings using `nn.Embedding` with variables like `vocab_size`, `n_embd` (number of embedding dimensions), and the linear layer applied after the multi-head attention process in the Transformer model.
+
+In conclusion, gist tokens and adapting Transformers to new modalities are substantial components of a broader design space where embeddings and tokenization play central roles. Both of these techniques showcase how we're moving towards more efficient and versatile models in machine learning.
+
+---
+Note that while this post discusses the use of gist tokens and adaptation of Transformers for non-text modalities, the specifics of the implementation details and research should be obtained directly from the relevant academic papers for accurate and thorough understanding.

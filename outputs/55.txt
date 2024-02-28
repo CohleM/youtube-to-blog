@@ -1,0 +1,21 @@
+### Understanding Language Model Limitations in Different Languages, Arithmetic, and Python Coding
+
+As I delve into the intricacies of language models, I've noticed some challenges they face across various applications. This exploration has led me to uncover some interesting quirks about how these models, particularly the tokenizer component, operate in non-English contexts, numerical computation, and programming languages like Python.
+
+#### Tokenization and Its Impact on Language Diversity
+Firstly, the treatment of text in non-English languages can be quite diverse when compared to English. For instance, a common English greeting, "Hello," is tokenized as a single unit. In contrast, the Korean equivalent "안녕하세요" - which also means "hello" - gets split into three tokens. Consequently, the tokenization process inflates non-English phrases, making them more "bloated and diffuse," as I've observed. This token bloat can partly explain why a language model might perform less effectively on non-English texts.
+
+#### The Quirks of Tokenizing Numerical Data
+Moving on to arithmetic, it's clear that language models have their limitations. Regular arithmetic operations like addition follow a straightforward character-level algorithm: you add the ones, then the tens, and so on. However, tokenization does not respect these numerical structures, instead arbitrarily slicing through numbers based on the tokenizer's learning from the training data. Here's what I mean:
+
+> "Integer tokenization is insane and this person basically systematically explores the tokenization of numbers in I believe this is GPT-2..."
+
+For example, four-digit numbers could be represented by various token combinations like (1,3), (2,2), or even as a single token. This arbitrariness and inconsistency pose significant challenges for a language model when performing simple numerical operations. The model sees and represents numbers inconsistently, hindering its arithmetic abilities.
+
+#### Improving Arithmetic in Language Models
+With that said, it's interesting to note that recent developments have sought to address this. For instance, LLaMA-2 by Meta utilizes the sentence piece tokenizer to split up digits consistently, aiding the model's performance in simple arithmetic tasks. It's fascinating that despite the "headwinds" faced by the models due to their original design, they still manage to perform numerical computations, albeit imperfectly.
+
+#### Language Models and Python Coding Proficiency
+Finally, I would like to touch on the performance of language models like GPT-2 with Python code. While some challenges are related to the model architecture, the training dataset, and the model's inherent strength, issues with tokenization also come into play. Python requires a correct and precise tokenization to comprehend and generate code effectively. The way tokens are created from code can greatly influence the model's understanding and subsequently its coding capabilities.
+
+As I have highlighted these areas of interest, it's evident that language models are continually evolving to overcome such challenges. By dissecting these topics, we get a clearer picture of the current state of language models and the steps being taken to enhance their capabilities across various domains.

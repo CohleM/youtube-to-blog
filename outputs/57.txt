@@ -1,0 +1,47 @@
+### Understanding Tokenization in Language Models
+
+Let me take you through an interesting aspect of how language models like GPT-3.5 work, focusing on tokenization and the nuances of token sequences. I recently encountered an intriguing issue related to trailing white spaces and their impact on the model’s performance, and I think it’s worth discussing in detail.
+
+#### Token Sequences and White Spaces
+
+Language models like GPT-3.5 are based on a principle called tokenization, where a piece of text is split into tokens. These tokens are essentially the building blocks the model uses to understand and generate text. Here's an example of how this works in practice:
+
+> "Here is a tagline for an ice cream shop: Scoops of happiness in every cone!"
+
+When we input this into the model, it converts the string into a sequence of tokens to process the information.
+
+#### The Trailing White Space Issue
+
+An interesting behavior occurs when a trailing white space is present at the end of the input text. For example, if the input text ends with a space like this:
+
+```plaintext
+"Here is a tagline for an ice cream shop "
+```
+
+and we hit ‘Submit,’ we would get a warning:
+
+> "Warning: Your text ends in a trailing space, which causes worse performance due to how the API splits text into tokens."
+
+#### What Happens Behind the Scenes
+
+The language model treats spaces as tokens as well. It usually expects a space to precede another character (like ' o'), combining into a single token, say token 8840 for ' o'. But if we have an input string that ends in a space, that last space becomes its own token (token 220) instead of being paired with an adjacent character. This isn't how the model typically observes text during training, so it throws the model off because the space isn't functioning as part of a standard token—it's on its own.
+
+The image illustrates this scenario with the input for an ice cream shop tagline and the associated warning about the trailing space.
+
+To break it down further:
+
+1. Normal Scenario:
+
+   - Input: `Here is a tagline for an ice cream shop...`
+   - The model anticipates the next token to include a space followed by a character, e.g., ' o'.
+
+2. Trailing Space Scenario:
+
+   - Input: `Here is a tagline for an ice cream shop ...` (Notice the space before the ellipsis)
+   - Instead of anticipating the next token to include the space, the model encounters just the space (token 220), which is an atypical situation for it.
+
+#### Why Does This Matter?
+
+The way tokens are structured and sequenced is critical for a language model's ability to predict and generate text accurately. A trailing space might seem like a small detail, but in the world of AI, where precision matters, it can lead to suboptimal performance. It's essentially about aligning the model's expectations with the input given—it expects a sequence that includes spaces as part of tokens, not on their own.
+
+This could potentially be a common pitfall when interacting with language models through an API, and understanding these intricacies helps us refine our inputs and achieve better results from the AI.

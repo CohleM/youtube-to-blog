@@ -1,0 +1,49 @@
+### Understanding Tokenization and Embeddings in Transformers
+
+In my latest exploration of Natural Language Processing (NLP), I've delved into the fundamental concepts of tokenization and how these tokens are used within Transformer models, such as GPT (Generative Pre-trained Transformer). Let's break down these complex topics step-by-step so that we can understand how language models perceive and process text.
+
+#### The Role of Tokens
+Tokens are the building blocks of language models. They can be thought of as the 'atoms' of textual data that a model works with. In our case, we examined a character-level tokenizer that converted individual characters into tokens, which were then processed by a language model.
+
+Traditionally, if we have a set of possible tokens, these are represented in an 'embedding table'. This table is essentially a database where each row corresponds to a different token. Using integer IDs associated with each token, the model retrieves the corresponding row from the embedding table. These rows contain trainable parameters that we optimize using backpropagation during the model's learning phase. The vector retrieved from the embedding table then feeds into the Transformer, influencing how it understands and generates text.
+
+#### From Characters to Token Chunks
+While a character-level tokenizer is simple and intuitive, it's not the most efficient or effective method for handling textual data in state-of-the-art language models. Instead, these models use more complex tokenization schemes, where text is split into larger 'chunks', rather than individual characters.
+
+One such method to construct these token chunks is the Byte Pair Encoding (BPE) algorithm. BPE allows us to tokenize text into frequently occurring subwords or sequences, which is a more efficient representation compared to character-level tokenization. The algorithm works by starting with a large vocabulary of characters and then iteratively merging the most frequent pairs of characters or character sequences to form new tokens, making the process more suitable for large language models.
+
+```python
+# Example of Byte Pair Encoding Algorithm
+vocab = {"l o w </w>": 5, "l o w e r </w>": 2, "n e w e s t </w>":6, "w i d e s t </w>":3}
+num_merges = 10
+for i in range(num_merges):
+    pairs = get_stats(vocab)
+    best = max(pairs, key=pairs.get)
+    vocab = merge_vocab(best, vocab)
+```
+
+#### Tokenization in GPT and Large Language Models
+To put this into perspective, we can look at papers like the one introducing GPT-2. They discuss tokenization and the desirable properties it should have. For example, GPT-2 uses a vocabulary of 50,257 tokens and has a context size of 1,024 tokens. In simple terms, this means that when processing text, each token can 'attend' to or consider the context of up to 1,024 preceding tokens in the sequence. This is a crucial aspect of how attention mechanisms in Transformer models operate, allowing them to maintain coherence over longer pieces of text.
+
+#### Code Snippet and Research Papers
+Below is a Python code snippet that demonstrates creating an embedding table for a vocabulary of tokens, which is then used in a neural network model.
+
+```python
+import torch
+import torch.nn as nn
+from torch.nn import functional as F
+
+class BigramLanguageModel(nn.Module):
+    def __init__(self, vocab_size):
+        super(BigramLanguageModel, self).__init__()
+        self.token_embedding_table = nn.Embedding(vocab_size, vocab_size)
+        # ...
+
+# This code constructs an embedding for each token to be used in the model.
+```
+
+Lastly, throughout this post, I've mentioned some seminal works in the field. Here are references to those:
+
+> Radford, et al., "Improving Language Understanding by Generative Pre-Training." and Radford, et al., "Language Models are Unsupervised Multitask Learners."
+
+Understanding these concepts and how they relate to the nuts and bolts of NLP models is crucial. Tokenization and embeddings are not just abstract ideas—they have concrete implementations that fundamentally shape the way language models interpret and generate human language.

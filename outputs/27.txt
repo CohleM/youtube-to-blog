@@ -1,0 +1,69 @@
+### Understanding the Byte Pair Encoding (BPE) Algorithm
+
+Byte Pair Encoding (BPE) is a data compression technique originally designed for text data compression, which has been adapted for use in natural language processing (NLP), particularly in tokenization tasks for language models. Before we delve into the specifics of BPE, it's important to lay out what tokenization entails. Tokenization is the process of splitting text into smaller units called tokens, which can be words, subwords, or characters, depending on the level of granularity required for a given NLP task.
+
+#### Breaking Down the BPE Process
+
+To give you a practical understanding of how BPE tokenization works, let's go through the steps using Python code as our reference point:
+
+1. **Encoding with BPE**:
+   In the provided image, we see a Python function `encode` defined, which outlines the encoding process of BPE. The function takes a string as input and produces a list of integers, which are the tokens.
+
+    ```python
+    def encode(text):
+        # given a string, return list of integers (the tokens)
+        tokens = list(text.encode("utf-8"))
+        while len(tokens) > 2:
+            stats = get_stats(tokens)
+            pair = min(stats, key=lambda p: merges.get(p, float("inf")))
+            if pair not in merges:
+                break # nothing else can be merged
+            idx = merges[pair]
+            tokens = merge(tokens, pair, idx)
+        return tokens
+    ```
+   
+   The approach here is to start with raw UTF-8 byte encoding of the input text and then repeatedly merge the most frequent adjacent byte pairs. The `merges` in the code refers to a dictionary that contains the merge operations obtained during the training phase of the tokenizer.
+
+2. **Decoding the Tokens**:
+   The purpose of decoding is to invert the tokenization process—converting the sequence of token integers back into the original string. The `decode` function is not shown in the image, but it's critical for ensuring that the tokenization process is reversible.
+   
+    ```python
+    print(decode(encode("hello world")))
+    # Output: "hello world"
+    ```
+
+Here, we can see that after encoding and decoding the text "hello world," we receive the original text back, indicating that the process can successfully round-trip the data without loss of information.
+
+3. **Verifying Tokenization Consistency**:
+   
+    ```python
+    text2 = decode(encode(text))
+    print(text2 == text)
+    # Output: True
+    ```
+
+   The code also does a check with `text2` to ensure that the encoded and then decoded text is equivalent to the original text—a crucial test for any tokenizer, ensuring that no data is lost or altered during the process.
+
+4. **Testing with Unseen Data**:
+
+    ```python
+    valtext = "Many common characters, including numerals, punctuation, and other symbols, are unified within the standa"
+    valtext2 = decode(encode(valtext))
+    print(valtext2 == valtext)
+    # Output: True
+    ```
+   
+   To ensure that the tokenizer generalizes well, it is tested on validation data—text that was not included in the training set. This is exemplified by taking a string snippet, possibly from an external webpage, encoding it, and then decoding it back to confirm consistency.
+
+#### Exploring State-of-the-Art Language Models
+
+Having established the fundamental principles of BPE, the discussion then transitions to examining tokenizer implementations in more advanced NLP models, like GPT-2. The GPT-2 paper is mentioned, which can be a valuable resource for readers interested in delving into the particulars of GPT-2's tokenizer:
+
+> The "GPT-2 paper" likely refers to "Language Models are Unsupervised Multitask Learners," detailing the tokenizer used for GPT-2.
+
+#### Connector Words and Vocabulary Size
+
+The CURRENT TEXT mentions the example of the word "dog," which frequently occurs in a language dataset. The application of BPE on such common words is a particular point of interest because it relates to the vocabulary size and efficiency of the tokenizer. Efficient tokenization strategies aim to have a balance between the vocabulary size and the token representation of various words and subwords within a language.
+
+In conclusion, we've just scratched the surface of the BPE algorithm and its application in contemporary NLP models. The specifics of these more advanced tokenizers will likely involve additional complexities and optimizations over the naive BPE implementation, enhancing their utility in various NLP tasks.

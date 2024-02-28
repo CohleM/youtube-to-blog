@@ -1,0 +1,45 @@
+### Explaining the Tokenization Algorithm
+
+In today's blog post, I'm going to walk you through a piece of a tokenization algorithm that is being implemented using Python. Tokenization is a critical step in natural language processing, and it involves breaking down text into smaller, more manageable pieces called tokens.
+
+#### The Context of the Problem
+Previously, I discussed selecting the most eligible pair for merging from a given set of token pairs, specifically looking for the pair with the minimum index in a 'merges' dictionary.
+
+#### Handling Non-Merging Pairs
+Now, let's talk about **what happens when a pair is not eligible to be merged.** Here's how the algorithm handles this case:
+```python
+pair = min(stats, key=lambda p: merges.get(p, float('inf')))
+```
+I used the `min` function to find the minimum index from `merges`. But what if a pair isn't there? That's where `float('inf')` plays an important role. By setting a pair's index to infinity if it's not found in `merges`, I ensure it's never chosen as a candidate for merging by the `min` function.
+
+Here's a more detailed breakdown:
+- A pair not in `merges` means it can't be merged.
+- Assigning it `float('inf')` ensures it's never the minimum.
+- This solves the problem of handling non-existing pairs elegantly.
+
+#### Edge Case: When There's Nothing to Merge
+During the process, I must be cautious about an important edge case:
+> If there's nothing to merge, all pairs would return `float('inf')`.
+
+If this occurs and every pair has an infinite index, the pair returned would be arbitrary, not a valid merging pair. To indicate that no more merges are possible, the algorithm will need to break out of the loop.
+
+#### Python Implementation Specifics
+As pointed out, this approach is very Pythonic—leveraging Python's dictionaries and functions effectively. Here's the critical part of the code:
+```python
+while True:
+    stats = get_stats(tokens)
+    pair = min(stats, key=lambda p: merges.get(p, float('inf')))
+    ...
+```
+I loop indefinitely, calculating stats and trying to find the most eligible pair to merge. If a valid pair exists inside `merges`, the `min` function returns it, allowing the algorithm to merge accordingly.
+
+Remember, if the `pair` is not in `merges`, the returned value acts as a signal that there's nothing left to merge, and the algorithm will break out of the loop.
+
+#### Example Output
+Just to give a practical example of how the encoding function would work:
+```python
+print(encode("hello world!"))
+```
+This would generate a list of integers corresponding to the encoded tokens of the input string "hello world!".
+
+By understanding each aspect of the algorithm, from handling non-merging pairs to dealing with merge completion, we can appreciate the complexities involved in tokenization—a fundamental process in many natural language processing applications.

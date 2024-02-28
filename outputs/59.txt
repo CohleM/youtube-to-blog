@@ -1,0 +1,37 @@
+### Understanding Unstable Tokens in Language Models
+
+In the complex world of natural language processing and machine learning, I've encountered a fascinating topic known as "unstable tokens." This concept may sound obscure, but it plays a crucial role in how language models interpret and generate text. Let me break it down for you step by step, so it's easier to digest.
+
+#### The Problem with Partial Tokens
+
+When dealing with large language models, such as the one depicted in the first image which appears to be a user interface for a model like GPT-3, issues can arise with what are called "partial tokens." These problems occur when a token (a basic unit of text for the model) is not fully represented. For example, if a training set always represents a certain word or sequence of characters as a single token, the model may become confused or produce errors when encountering only a part of this token in practice.
+
+> "...complete it because it's never occurred in the training set... it always appears like this and becomes a single token..."
+
+From personal experience, when entering text into a language model as shown in the screenshot, partial tokens can cause unpredictable behavior. Such as the model being "extremely unhappy" with the input and possibly flagging it due to perceived violations of usage policies.
+
+#### Digging Into the Codebase
+
+Investigating further, we can look at a codebase related to tokenization – this could be something akin to the second image showing a GitHub repository with Rust code. By searching for terms like "unstable," we find that the concerns around unstable tokens manifest in features like `fn_increase_last_piece_token_len` and discussions around "unstable regex splitting."
+
+> "...search for unstable and you'll see... encode unstable native unstable tokens and a lot of like special case handling..."
+
+These code segments often handle special cases and exceptions, indicating that the developers are aware of the issue and need custom logic to manage these unstable tokens.
+
+#### The Ideal Scenario for Token Sequencing
+
+The ultimate goal with a language model's completion API is not to just blindly add the next token after an identified partial token. Instead, we aim for a more intricate process, whereby a multitude of potential tokens are considered, and characters are added based on their likelihood to form a meaningful sequence.
+
+> "...if we're putting in `default cell sta`... appending... trying to consider lots of tokens that if we retened would be of high probability..."
+
+This suggests a desire for an intelligent system that can handle partial tokens by considering the context and probabilities to form valid completions, rather than only operating on rigid token boundaries.
+
+#### An Intriguing Example: Solid Gold Magikarp
+
+Lastly, I've come across a captivating reference to a concept called "solid gold Magikarp," which, although it may sound whimsical, has become something of legend within language models and machine learning circles.
+
+> "...solid gold Magikarp and... this is internet famous now for those of us in llms..."
+
+While I can't go into full detail here, this refers to a notable phenomenon or perhaps an example illustrating a peculiar aspect of model behavior, one that has garnered enough attention to be mentioned in a dedicated blog post.
+
+To truly understand the intricacies of unstable tokens, their impact on language model performance, and curious cases like the "solid gold Magikarp," further exploration is necessary. It's a deep and multifaceted topic that intertwines tokenization mechanics with model behavior, raising both technical challenges and fascinating questions about how we approach the design of language models.

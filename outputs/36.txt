@@ -1,0 +1,50 @@
+### Understanding GPT-2 Tokenizer and Tokenization Process
+
+As I delve into the world of natural language processing and machine learning, I find myself exploring the inner workings of the GPT-2 tokenizer. My aim in this blog section is to explain the tokenizer's components and the tokenization process implemented by OpenAI for GPT-2.
+
+#### Tokenizer's Key Files: encoder.json and vocab.bpe
+
+The tokenizer is a crucial part of the GPT-2 model that processes input text. OpenAI has released two important files that constitute the saved tokenizer: `encoder.json` and `vocab.bpe`. These files are loaded and given light processing before being used by the tokenizer.
+
+Here's a snippet of code that illustrates how you can download and inspect these files:
+```python
+# to download these two files:
+# wget https://openaipublic.blob.core.windows.net/gpt-2/models/1558M/vocab.bpe
+# wget https://openaipublic.blob.core.windows.net/gpt-2/models/1558M/encoder.json
+
+import os, json
+
+with open('encoder.json', 'r') as f:
+    encoder = json.load(f)
+
+with open('vocab.bpe', 'r', encoding="utf-8") as f:
+    bpe_data = f.read()
+    bpe_merges = [tuple(merge_str.split()) for merge_str in bpe_data.split('\n')[1:-1]]
+```
+#### Understanding Encoder and Byte-Pair Encoding (BPE)
+
+- The `encoder.json` file, also known as the `encoder`, corresponds to the vocabulary object (`vocab`). It transforms integers to bytes, which represent the text characters.
+
+- The `vocab.bpe` file, confusingly named, actually contains the merges used in Byte-Pair Encoding (BPE). BPE is an algorithm used to iteratively merge the most frequent pairs of bytes or characters in a set of words, which helps in reducing the vocabulary size and allowing the model to handle unknown words more effectively. In OpenAI's code, they refer to these merges as `bpe_merges`.
+
+#### Comparing Our Vocab and Merges to OpenAI's Implementation
+
+It's stated that our `vocab` object is essentially the same as OpenAI's `encoder`, and what we refer to as `merges` is equivalent to OpenAI's `vocab_bpe` or `bpe_merges`.
+
+#### Additional Encoder and Decoder Layers
+
+OpenAI also implements a `byte_encoder` and a `byte_decoder`, which seems to be an additional layer of processing. However, it is described as a spurious implementation detail that does not add anything deeply meaningful to the tokenizer. Thus, the blog is skipping over the intricacies of these components.
+
+#### Example of Tokenizer in Action
+
+For an illustrative purpose, let's look at an example using the GPT-4 tokenizer:
+```python
+enc = tiktoker.get_encoding("c1lookk_base")
+print(enc.encode(" Hello world!!!"))
+# Outputs: [220, 220, 220, 23748, 995, 10185] [262, 24748, 1917, 12340]
+```
+The code above shows how the model encodes a simple string, transforming it into a sequence of integers that represent tokens.
+
+By understanding these key components and processes, you can have a clearer view of how tokenization works within the GPT-2 framework.
+
+> Reference the GPT-2 `encoder.py` [Download the vocab.bpe and encoder.json files.](https://github.com/openai/gpt-2)

@@ -1,0 +1,36 @@
+### Understanding Character-Level Tasks in Large Language Models (LLMs)
+
+Today, we're diving deep into the performance of large language models (LLMs) on character-level tasks. As I investigate, I'll use examples to illustrate the behavior of these models, particularly focusing on tokenization and its implications.
+
+#### The Challenge of Counting Characters
+When probing an LLM with a simple question such as counting the letters 'L' in the word "default style," it stumbled. My prompt was specifically crafted to challenge the model because the word "default style" was tokenized into a single entity. Despite my expectation that counting characters should be straightforward, the model incorrectly counted three 'L's instead of four. This error suggests that the LLM may struggle with spelling-related tasks due to the way it processes and tokenizes text.
+
+#### String Reversal Task
+Moving to a more complex operation, I asked the LLM to reverse the string "default style." At first, the model tried to invoke a code interpreter, but after directing it to perform the task without such tools, it failed, providing a jumbled and incorrect result. This demonstrated its difficulty in reversing strings — a character-level operation that seems to be outside the model's direct capabilities.
+
+#### A Two-Step Solution to Reversal
+To work around this limitation, I attempted a different tactic. I instructed the model to:
+
+1. Print out every character in "default style" separated by spaces.
+2. Reverse the list of these separated characters.
+
+Initially, the model again tried to use a tool, but upon insisting it do the task directly, it successfully completed both steps.
+
+```mathematica
+D. e. f. a. u. l. t. C. e. l. l. S. t. y. l. e.
+```
+
+And then reversed:
+
+```mathematica
+e. l. y. t. S. l. l. e. C. t. l. u. a. f. e. D.
+```
+
+It's noteworthy that the LLM could accurately reverse the characters when they were explicitly listed out. This indicates that when the task involves individual tokens, the model's performance improves significantly.
+
+#### Language Bias and Tokenization
+This exploration doesn't end with the English language. There's a noticeable discrepancy in how LLMs handle non-English languages, largely due to the amount of non-English data used to train these models and how their tokenizers are developed.
+
+To illustrate, the English phrase "hello how are you" comprises five tokens, whereas its translation in another language could result in a significantly longer token sequence. For example, the Korean equivalent of "hello" ("안녕") surprisingly breaks down into three tokens, even though it is a common greeting. This demonstrates a "blow-up" in token count when dealing with non-English languages, which could hinder an LLM's efficiency and accuracy in tasks involving such languages.
+
+> The difference in tokenization between languages underscores the importance of tokenizer training and the need for diverse linguistic data to improve the performance of LLMs across various languages.

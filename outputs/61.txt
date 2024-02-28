@@ -1,0 +1,37 @@
+### Exploring Tokenization and Language Models
+
+In my recent exploration, I delved into the fascinating and sometimes quirky world of language models and how they learn from their training data. A particularly intriguing example came from an incident involving a Reddit user known as "SolidGoldMagikarp." Let me take you through what happened step by step.
+
+#### The Quirk of Tokenization
+Tokenization is the first stage in processing natural language text for language models like GPT-2 and GPT-3. During tokenization, raw text is split into pieces, called tokens, which the model can digest. It's here where things started to get interesting with the username "SolidGoldMagikarp."
+
+The tokenization dataset for GPT models often includes a vast amount of varied text to cover as many language nuances as possible. In this case, it appears that there was a significant difference between the tokenization dataset and the actual training dataset for the language model. Potentially due to "SolidGoldMagikarp" being a frequent poster, this username was recurrent in the tokenization dataset and, as a result, received its own unique token in the model's vocabulary.
+
+Here's a simplified breakdown of what likely happened:
+
+1. **Token Creation**: A Reddit username, due to its frequency in the tokenization dataset, was assigned a dedicated token.
+2. **Vocabulary Size**: Language models like GPT-2 have a cap on the number of tokens—around 50,000—in their vocabulary.
+3. **Training Data Disparity**: The specific Reddit data that included "SolidGoldMagikarp" was not present in the language model training dataset.
+4. **Unused Token**: Since the dedicated token for "SolidGoldMagikarp" was never encountered in training, it remained 'untrained.'
+
+#### Consequences of Untrained Tokens
+The lack of training for the unique "SolidGoldMagikarp" token meant that during the optimization process, the vector associated with this token in the embedding table never got updated. Consequently, this untrained vector is akin to "unallocated memory," similar to what might occur in a traditional binary program written in C.
+
+#### Undefined Behavior at Test Time
+Now, when the "SolidGoldMagikarp" token was evoked at test time, the model would fetch its untrained vector from the embedding table. Inserting this vector into the layers of the Transformer model led to unpredictable or undefined behavior. This is because models learn to generate responses based on patterns seen during training, and the untrained token didn't have associated patterns for the model to use.
+
+#### Token Anomalies and Model Behavior
+Such anomalies can cause a language model to exhibit atypical behavior, which is often out of sample or out of distribution. This can manifest in unexpected ways when the model confronts tokens or patterns that weren't in its training set.
+
+To illustrate further, here's a practical example:
+
+> "Imagine encountering a variable in a program that you’ve never assigned a value to. When that variable is used, the program's behavior can be erratic because it's working with an unknown quantity. That's similar to the language model trying to use an 'untrained' token like 'SolidGoldMagikarp'."
+
+#### The Role of Formats, Representations, and Languages
+It's essential to note that while this example highlights token anomalies, it's part of a broader discussion about how language models interpret and generate text based on their inputs. Different formats, representations, and languages can affect how a model responds, as the efficacy of tokenization and subsequent model training varies across these attributes.
+
+In closing, the case of "SolidGoldMagikarp" is but one example of how complex and unpredictable the interaction between language models and their training data can be. It underscores the importance of a well-curated training dataset that aligns closely with the tokenization process to produce reliable and coherent outputs from these advanced artificial intelligences.
+
+---
+
+The two images provided accompany this explanation by showing the practical manifestations of the discussed concepts. They present cases of the model interacting with abnormal tokens and their corresponding outputs, giving visual credence to the intricacies of language model training and behavior.

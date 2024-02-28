@@ -1,0 +1,53 @@
+### Understanding Unicode and Python's 'ord' Function
+
+As I'm diving into the complexities of character encoding, one topic that might come across as quite intricate is the Unicode standard. Unicode is essential in representing a wide variety of characters from numerous languages and scripts. With over 150,000 characters across 161 scripts to its name, Unicode allows for consistent representation of text in a multitude of applications. The challenge comes when trying to work with these myriad characters in a programming context, especially when trying to understand their unique code points.
+
+#### Accessing Unicode Code Points in Python
+
+So, how do we work with Unicode characters in Python? We use the `ord` function to obtain the Unicode code point for a given single character. Here's a simple code snippet that demonstrates this:
+
+```python
+# Get the Unicode code point for 'H'
+print(ord('H'))  # The output will be 104
+```
+
+For single characters like 'H', it's straightforward to see that the Unicode code point is 104. But when dealing with characters beyond the basic Latin script, things get a bit trickier.
+
+For example, if you want to find out the code point for an emoji, you can use the same `ord` function:
+
+```python
+# Get the Unicode code point for an emoji
+print(ord('👍'))  # The output will be 128077
+```
+
+#### Limitations of Single Code Points
+
+Bear in mind, the `ord` function can only interpret single characters, not entire strings. Attempting to pass a string will result in an error because strings contain multiple code points. Each character has an individual integer representing its Unicode code point, which we can inspect by iterating over the string:
+
+```python
+# Iterate over each character in a string to get their code points
+print([ord(char) for char in 'Hello 👍'])  # This will produce a list of code points
+```
+
+### Exploring Unicode Encodings: UTF-8, UTF-16, and UTF-32
+
+Given the massive number of unique integers representing code points, it's clear that handling such a vast vocabulary could be cumbersome. Moreover, the ever-evolving nature of Unicode introduces further instability. Hence, there's a need for more efficient and stable representations of these characters, which brings us to Unicode encodings.
+
+#### Why Encodings Matter
+
+Encodings are how we convert Unicode text into binary data that computers can understand and process. Visiting the Wikipedia page, we can learn about the three encoding types defined by the Unicode Consortium: UTF-8, UTF-16, and UTF-32.
+
+> Here's a quick look at what these encodings mean:
+> - UTF-8: A variable-width character encoding capable of encoding all valid Unicode code points.
+> - UTF-16: A character encoding that can use one or two 16-bit code units.
+> - UTF-32: A character encoding that uses exactly four bytes for each code point.
+
+UTF-8 is particularly notable due to its prevalence and efficiency when dealing with a wide range of characters. It has become a standard for web and Internet-related text handling.
+
+```markdown
+![Wikipedia Page on Unicode](https://upload.wikimedia.org/wikipedia/en/thumb/2/2f/Unicode_standard_logo.svg/1200px-Unicode_standard_logo.svg.png)
+```
+
+#### What To Take Away From The Wikipedia Page
+
+While diving deep into the UTF-8 Wikipedia page would be time-consuming, it's important to extract the critical points regarding how these encodings allow for data to be seamlessly translated and stored in binary form. Essentially, they ensure that the vast array of text we encounter can be adequately handled in our coding endeavors.

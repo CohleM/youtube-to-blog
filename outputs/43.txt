@@ -1,0 +1,46 @@
+### SentencePiece vs TikTok Tokenization
+
+In today's discussion, we're diving into the nuanced world of tokenization in natural language processing, particularly focusing on two tokenizers: SentencePiece and TikTok. Understanding the inner workings of these tokenizers is pivotal for anyone involved in neural network-based text generation, machine translation, or similar fields.
+
+#### Byte Pair Encoding (BPE)
+
+Let's begin by breaking down the concept of Byte Pair Encoding (BPE), which plays a central role in the operation of both SentencePiece and TikTok tokenizers. BPE is a method for creating a set of subword tokens based on frequently occurring pairs of bytes (or characters) in the text. Essentially, it starts with a large corpus of text and then repeatedly merges the most frequent pair of adjacent tokens until it reaches a set vocabulary size.
+
+#### SentencePiece Tokenization
+
+SentencePiece, an unsupervised text tokenizer, takes a unique approach to this process:
+
+- **Works Directly on Unicode Code Points**: Unlike TikTok, SentencePiece operates directly on the Unicode code points in a string rather than on the byte representation.
+
+- **Character Coverage Hyperparameter**: This is utilized to decide how to handle rare code points, which are characters that do not appear frequently in the training set. SentencePiece can map these to a special unknown (UNK) token or use a "byte fallback" mechanism.
+
+- **Byte Fallback Method**: If enabled, this will encode rare code points using UTF-8, and then those individual bytes of encoding are translated back into tokens with special byte tokens being added to the vocabulary.
+
+Here's a Python snippet demonstrating how to import SentencePiece and write a toy dataset for tokenization purposes:
+```python
+import sentencepiece as spm
+
+# write a toy.txt file with some random text
+with open("toy.txt", "w", encoding="utf-8") as f:
+    f.write("SentencePiece is an unsupervised text tokenizer and detokenizer mainly for Neural Network-based text generation.")
+```
+
+#### TikTok Tokenization
+
+Contrastingly, TikTok tokenization differs in the following way:
+
+- **Operates on Bytes**: TikTok first translates code points to bytes using mutf-8 encoding and then performs BPE on these bytes.
+
+#### Configuring SentencePiece
+
+Making sense of SentencePiece's myriad of configuration options can be daunting, especially since it's been accruing functionality to cater to diverse needs over time. The wealth of options might seem overwhelming, often leaving many of them irrelevant to a given task.
+
+For thorough insight into the training options, one can check out the exhaustive list provided in their documentation, particularly within the ProtoBuf definition of the training specifications:
+
+> The ProtoBuf definition houses details on the training specs and various configurations pertinent to SentencePiece.
+
+#### Example of Configuration Complexity
+
+Consider the `character_coverage` setting, which has the potential to influence how the tokenizer deals with infrequently occurring code points. This is a prime example of the intricate settings available within SentencePiece, contributing to its flexibility and also its complexity.
+
+By explaining these concepts step by step, we can better appreciate the intricate differences in how SentencePiece and TikTok handle tokenization challenges—differences that might seem subtle but have significant implications for those working in computational linguistics and machine learning.

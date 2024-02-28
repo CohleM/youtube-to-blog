@@ -1,0 +1,45 @@
+### Understanding Tokenization in Transformers
+
+Tokenization plays a crucial role in language models and transformers. It's the process of splitting input data into smaller pieces—tokens—that can be processed by a model. This process is not limited to text; it applies to images and videos as well. Let's delve into this exciting field of tokenizing different modalities and understand each concept discussed in the mentioned video.
+
+#### Tokens of Images and Videos
+
+The idea of applying tokenization to visual data like images and videos is inspired by the success of tokenization in the processing of text data. Just as words and characters are tokenized in text, images and videos can be divided into patches—these patches can be thought of as visual tokens.
+
+- **Hard and Soft Tokens:** Tokens can either be *hard*, meaning they are discrete elements like integers, or *soft*, meaning they are continuous and do not need to be strictly discrete. Soft tokens commonly pass through a bottleneck, similar to Autoencoders, forcing a compressed representation that captures the essential information.
+
+  > An example of a paper showcasing this approach is "Taming Transformers for High-Resolution Image Synthesis" (also known as VQGAN), published at CVPR 2021. The work introduces a convolutional approach to efficient image synthesis involving transformers.
+
+#### SORA and Visual Patches
+
+OpenAI's SORA demonstrates an innovative way to tokenize videos, creating patches that serve as visual tokens, much like text tokens in language models.
+
+- **Visual Patches:** Unlike text tokens, which represent words or subwords, visual patches represent sections of an image or frame in a video. This technique allows for processing images and videos with transformer models by converting visual data into a format that the model can understand and manipulate.
+
+  > According to OpenAI's page on tokenizing visual data, "Turning visual data into patches," SORA uses visual patches, a representation shown to be highly scalable and effective for generative models on a variety of video and image types.
+
+#### Tokenization and Spelling in Language Models
+
+When it comes to language models (LMs) and spelling, tokenization can be a limiting factor. Tokens representing long sequences of characters may restrict a model's ability to perform tasks related to spelling and character-level understanding.
+
+- **Spelling Challenges:** The granularity of tokens in an LM can affect its spelling ability. For instance, a token in a language model's vocabulary that encapsulates a whole word or phrase might hinder the model's proficiency in tasks such as counting letters or spelling because many characters are packed into a single token.
+
+  > An experiment involving the GPT-4 vocabulary highlighted that a phrase like "default style" is considered a single token by the model. A language model might struggle with spelling tasks for such a token, as it is treated as a unitary element rather than a sequence of individual characters.
+
+#### Conclusion
+
+Tokenization is foundational in understanding the behavior of language models and now extends to other domains such as images and videos. This shift towards unifying the representation of various input data types through tokenization is an ongoing area of research and has the potential to revolutionize the capabilities of AI models.
+
+#### Example Code Snippet (Hypothetical)
+
+While the images did not provide code snippets directly related to tokenization, here is an example of how tokenization might look in Python for text:
+
+```python
+from transformers import AutoTokenizer
+
+tokenizer = AutoTokenizer.from_pretrained('bert-base-uncased')
+tokens = tokenizer.tokenize("Here is an example of tokenization.")
+print(tokens)
+```
+
+In this example, imagine replacing text with a sequence of image patches or video frames to tokenize visual data, which would then be similarly processed by a transformer model designed to handle such inputs.

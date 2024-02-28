@@ -1,0 +1,47 @@
+### Tokenization in Natural Language Processing Using Regex Patterns
+
+In this section of the blog, I am going to explain the process of tokenizing a string meant to be fed into a natural language processing model like GPT-2. We'll be looking at a particular method of tokenization using regular expressions (regex) in Python, which involves complex pattern matching.
+
+#### The Regex Module
+First, I'd like to clarify that instead of using the built-in `re` module in Python, we're working with an extension called `regex`, which can be installed using `pip install regex`. This package extends the capabilities of the standard `re` module and offers more flexibility and power for pattern matching.
+
+#### Compiling the Regex Pattern
+In our case, a regex pattern has been compiled in the following way:
+
+```python
+import regex as re
+gpt2pat = re.compile(r"""...the pattern...""")
+```
+
+I've taken this pattern from the source code provided and I'm going to break it down for you. However, it is important to note that this is not the complete pattern; it's an excerpt.
+
+#### Understanding the `re.findall` Function
+The function `re.findall` is used to search a given string for all matches of a regex pattern and returns them as a list. We apply `re.findall` like this:
+
+```python
+import regex as re
+gpt2pat = re.compile(r"""...the pattern...""")
+print(re.findall(gpt2pat, "Hello world"))
+```
+
+This will output a list of tokens that the pattern identifies in the string "Hello world".
+
+#### Breaking Down the Pattern
+The regex pattern used in the example is quite complex, so let's look at its structure. Here is an explanation of some components the author focused on:
+
+- **Raw String Notation (`r"""""`)**: This notation is used to tell Python that the string should be treated exactly as written, which means that escape characters are not translated but are taken literally.
+
+- **Vertical Bars (`|`)**: These are used in regex to signify the 'OR' operation, meaning that the pattern matches any one of several possible sub-patterns.
+
+- **\p{L}**: This is a Unicode property that matches any kind of letter from any language. For example, 'h', 'e', 'l' in "hello" are matched by `\p{L}`.
+
+- **Optional Space followed by Letters (` ?\p{L}+`)**: This pattern matches an optional space followed by one or more letters. In the given example, this would match the word "hello" until a whitespace, which is not a letter, is encountered.
+
+With these building blocks, the pattern attempts to match the string "Hello world" by progressing left to right, trying to identify segments that match the pattern components, and then breaking at points where the string does not fit the pattern.
+
+#### Example Output
+Assuming the pattern is properly constructed to tokenize English text, the output of the `re.findall` function would be a list of tokens that might look something like `['Hello', 'world']`, given that 'Hello' is identified by the portion of the pattern that looks for one or more letters and 'world' is identified similarly after a whitespace which terminates the match for 'Hello'.
+
+> Note that I have referred to some documentation or other sources to understand `\p{L}` and other regex components.
+
+By tokenizing text this way, we can prepare strings for processing by models like GPT-2, which often require text to be broken down into smaller components or tokens for efficient analysis and generation. This detailed explanation should give you an insight into how advanced tokenization techniques work, especially when dealing with sophisticated machine learning models.

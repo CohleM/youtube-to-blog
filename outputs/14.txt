@@ -1,0 +1,53 @@
+### Token Frequency Analysis in Python
+
+As part of understanding the frequency of consecutive token pairs in a given text, I've been working on tokenization. Tokenization is the process of splitting a text into meaningful elements called tokens, and it's a crucial step in natural language processing (NLP). Let me take you through the analysis I recently performed using Python.
+
+#### Breaking Down the Python Code for Token Analysis
+
+The task involves analyzing a list of tokens and identifying consecutive pairs that occur frequently together. Here's a step-by-step explanation of the code I wrote for this analysis:
+
+1. **Getting Token Pair Statistics**:
+    ```python
+    def get_stats(ids):
+        counts = {}
+        for pair in zip(ids, ids[1:]):  # Pythonic way to iterate consecutive elements
+            counts[pair] = counts.get(pair, 0) + 1
+        return counts
+    ```
+    I defined a function, `get_stats`, which calculates the count of each consecutive token pair in a list. By zipping the list `ids` with itself offset by one, I iterated over consecutive pairs of tokens. The `counts` dictionary records the frequency of each pair.
+
+2. **Calling `get_stats` and Printing the Results**:
+    ```python
+    stats = get_stats(tokens)
+    print(stats)
+    ```
+    I called this function by passing a list of tokens and stored the results in `stats`. Then, I printed out `stats` to see all the token pairs along with their counts.
+
+3. **Sorting Token Pairs by Frequency**:
+    ```python
+    # print(sorted(((v, k) for k, v in stats.items()), reverse=True))
+    ```
+    This commented-out line is crucial for understanding how to obtain the most frequently occurring pairs. It sorts the pairs by their count values in a descending order. However, note that this line was commented out, meaning it was not executed in this instance.
+
+4. **Most Commonly Occurring Consecutive Pair Identification**:
+   This part of the analysis focuses on identifying the token pair with the highest occurrence. To accomplish this, I leveraged Python's sorting functionality to sort the items by their value (the frequency count) in reverse order, which effectively sorted them from the most to the least frequent.
+
+#### Analyzing the Most Frequent Pair
+
+Upon completing the sorting process, I found that the most commonly occurring consecutive token pair was `(101, 32)` with a count of 20 occurrences. To make sense of these numbers, I used the `chr` function in Python which converts Unicode code points into their corresponding characters:
+
+```python
+print(chr(101), chr(32))
+```
+
+After calling this function with `101` and `32`, I found that they stand for 'e' and a space character, respectively. Thus, the pair 'e ' (the letter 'e' followed by a space) was the most frequent, indicating that many words in the text end with the letter 'e'.
+
+#### Minting a New Token and Swapping
+
+Now, with the knowledge of the most common consecutive token pair, I aimed to iterate over the list of tokens and replace every occurrence of `(101, 32)` with a newly minted token with the ID of `256`. The new token would symbolize the 'e ' combination, and this process is termed token re-mapping.
+
+To implement the token swapping, I would need to loop through the tokens and wherever I found the sequence `(101, 32)`, I would replace it with `256`. However, the details of the swapping code implementation were not provided in the given texts or images.
+
+> Remember, you can attempt to perform this token swapping yourself as a coding exercise. It would involve handling lists and dictionary data structures in Python and could be a practical application of the principles discussed in this analysis.
+
+Thus, we have dissected a complex task of analyzing token frequencies, identified the most common pair, and discussed the next steps toward optimizing the representation of tokens in the text data.

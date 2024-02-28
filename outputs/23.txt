@@ -1,0 +1,82 @@
+### Encoding and Decoding in Natural Language Processing
+
+In the field of Natural Language Processing (NLP), encoding and decoding are critical steps for machines to understand and generate human languages. Let's dive into the complex process of how text is turned into tokens, and vice versa, using Python.
+
+#### Understanding UTF-8 and Error Handling
+
+While working with text in computer systems, we often deal with different character encodings, with UTF-8 being a common one. UTF-8 is a variable-width character encoding which can represent any standard Unicode character.
+
+```markdown
+> To simplify and standardize error handling, codes may implement different error handling schemes by accepting the `errors` string argument.
+```
+
+When we attempt to decode or encode characters, we might encounter sequences that are not valid. For instance, not every sequence of bytes is valid UTF-8. When such a scenario occurs, Python provides several strategies to handle errors.
+
+```python
+decoded_text = text.decode('utf-8', errors='replace')
+```
+
+The `'replace'` strategy substitutes any problematic bytes with a replacement character, typically the Unicode character `U+FFFD`.
+
+#### Encoding String to Tokens
+
+Encoding is the process of converting a string into a sequence of tokens. Here's how to implement this transformation:
+
+1. **Encoding to UTF-8**: The first step is encoding our text into raw UTF-8 bytes. This is represented as a bytes object in Python.
+
+```python
+encoded_bytes = text.encode('utf-8')
+```
+
+2. **Generating Tokens**: After encoding text into UTF-8, we convert the bytes object into a list of integers which will be our raw token sequence.
+
+```python
+tokens = list(encoded_bytes)
+```
+
+Now that we have our tokens, if there's a preset merging logic defined (as in subword tokenization schemes), we need to apply it accordingly.
+
+#### Decoding Tokens to String
+
+Decoding, on the other hand, is converting a sequence of integer tokens back into a string:
+
+```python
+def decode(ids):
+    # Given ids (list of integers), return Python string
+    tokens = b''.join(vocab[idx] for idx in ids)
+    text = tokens.decode("utf-8", errors="replace")
+    return text
+```
+Here `vocab` is a dictionary mapping token ids to their byte representation, and `decode` here uses UTF-8 encoding with error replacement strategy.
+
+#### Implementing Merging Logic for Tokens
+
+If we need to apply a merging dictionary which tells us which tokens (or byte pairs) can be merged together, we must respect the order in which the merges were defined:
+
+```python
+for (p0, p1), idx in merges.items():
+    vocab[idx] = vocab[p0] + vocab[p1]
+```
+
+This logic would be used if our tokenization strategy involves using byte-pair encoding (BPE) or similar merging methods.
+
+#### Example of Token Encoding
+
+Let's look at an example:
+
+```python
+def encode(text):
+    # Given a string, return list of integers (the tokens)
+    tokens = list(text.encode('utf-8'))
+    return tokens
+```
+
+Say we want to encode the string `"hello world!"`. We would use the `encode` function to get the list of tokens.
+
+```python
+print(encode("hello world!"))
+```
+
+These processes are crucial when working with large language models, like those from OpenAI, where accurately encoding inputs and decoding outputs is a fundamental task.
+
+Remember to try out these concepts to better understand the intricacies of working with different encoding schemes and how they can be applied within the field of NLP.

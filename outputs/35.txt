@@ -1,0 +1,45 @@
+### Understanding the GPT Tokenizer Changes and the GPT-2 Encoder Details
+
+In this blog section, I'm going to discuss some key changes seen in the GPT-4 tokenizer compared to its predecessors, break down the importance of special tokens, and walk you through the GPT-2 encoder details provided by OpenAI.
+
+#### GPT-4 Tokenizer Changes
+OpenAI has been quite secretive about the algorithmic innovations behind their language models. However, they have published subtle details that I've come across, particularly changes in the patterns used for tokenization in GPT-4. To understand these patterns, keenly examining the regex (regular expression) documentation alongside live examples like chat GPT can be instrumental in grasping the nuances.
+
+One significant update in GPT-4's tokenizer is the introduction of case-insensitive matching. In the previous version, the tokenizer would not match possessive forms like 's, 'd, or 'm accurately if they were in uppercase. The updated pattern includes the "i" flag which stands for case-insensitive, so now, both uppercase and lowercase possessives are matched correctly.
+
+Handling whitespace has been improved as well, although the specifics aren't discussed in great detail for the sake of simplicity. 
+
+Another interesting modification is how the tokenizer handles numbers. It restricts the merging of numeric tokens to sequences with up to three digits. This means long sequences of numbers are avoided, which helps prevent tokens from becoming overly lengthy number sequences. The reasoning behind this change isn't documented, but it's clear that GPT-4 has a specific strategy when it comes to numerical data.
+
+> The patterns are complex and the exact reasons behind the changes are not documented by OpenAI.
+
+#### Special Tokens Considerations
+Special tokens are symbols or sequences of symbols that have specific meanings or functions within a text. They serve as markers for the beginning and end of texts, or can signal a change in context, such as a switch to a prompt. We'll delve deeper into this concept shortly.
+
+#### The GPT-2 Encoder (`encoder.py`)
+Now, let's look at the `gpt2_encoder.py` file provided by OpenAI. This file outlines the inner workings of GPT-2's tokenizer. The file comprises definitions that map the tokenization pattern, as seen from the images above. These definitions include the vocabulary size, special tokens, and patterns required for the tokenizer to function correctly.
+
+For example, here is how the GPT-2 tokenizer's basic details are structured within the code:
+
+```python
+def gpt2():
+    mergeable_ranks = data_gym_to_mergeable_bpe_ranks(...)
+    vocab_bpe_file="https://openaipublic.blob.core.windows.net/gpt-2/encodings/vocab.bpe",
+    encoder_json_file="https://openaipublic.blob.core.windows.net/gpt-2/encodings/encoder.json",
+    vocab_bpe_hash="c1e6644773c5afe30c8864219a93edc642545b257b8188a9e6be33b7726adc5",
+    encoder_json_hash="1916368b6ee83bf3d5b6447274317ae82f612a97c51cda1f36ed2256dbf636783",
+    ...
+
+    return {
+        "name": "gpt2",
+        "explicit_n_vocab": 50257,
+        "pattern_in_vocab": <complex regex pattern>,
+        "mergeable_ranks": mergeable_ranks,
+        "special_tokens": (ENDOFTEXT: 50256),
+        ...
+    }
+```
+
+The code defines a dictionary with the tokenizer's name, explicit vocabulary size, the regex pattern for its operation, mergeable ranks—a data structure important for some tokenization operations—and the list of special tokens such as ENDOFTEXT.
+
+Through this brief walkthrough, I've explained some intricacies behind OpenAI's tokenizer changes and provided you with an inside look at the GPT-2 encoder details. Even though we might not understand all changes fully due to lack of documentation, we can appreciate the complexity and thought that goes into creating these patterns for natural language processing.

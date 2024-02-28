@@ -1,0 +1,56 @@
+### Tokenization in NLP: Efficiency and Practical Recommendations
+
+Welcome to this section of our blog where I delve into the complexities of tokenization in Natural Language Processing (NLP). We've been exploring how the process of tokenizing text can significantly impact both the performance of language models like GPT, as well as the economics behind processing large amounts of data. Let me break down some of these insights in a more digestible format for you.
+
+#### Understanding Tokenization Density
+
+Tokenization is a foundational step in NLP where text is broken into smaller pieces, called tokens. These tokens can be words, subwords, or even characters. The way we tokenize information can result in very different representations of the same data.
+
+For instance, the tokenization process can be less efficient with some data formats compared to others. JSON, for example, is a data format that is quite dense in tokens, meaning it produces a large quantity of tokens for a given amount of information. YAML, on the other hand, is more efficient, creating fewer tokens for the same data. 
+
+> *The JSON representation of a product data requires 116 tokens, while the YAML representation of the same data requires only 99 tokens.*
+
+This is a practical consideration since, in the "token economy," whether it's about the context length in an NLP model or the cost related to processing data, having a dense token representation can be an expensive affair.
+
+#### Translating Tokenization into Cost
+
+With token-based billing models, every token counts literally and financially. So, if we're being charged for every token we use, it's crucial to look for ways to reduce the number of tokens without losing essential information. 
+
+In the examples presented, you can see that the product information in JSON format results in a token count of 214, while the same information in YAML has a lower token count. This implies that opting for a format like YAML could yield cost savings, especially when scaling up the processing of vast amounts of data.
+
+#### Practical Tips and Recommendations
+
+Given the importance of tokenization, here are some practical tips based on the video's recommendations:
+
+1. **Reusing Existing Tokens**: If your application can reuse GPT-4 tokens and its vocabulary, this is a highly recommended approach. It optimizes efficiency by leveraging a well-established tokenization scheme.
+
+2. **Choosing Tokenization Libraries**: The 'Tech token' (assumed 'Hugging Face Transformers Tokenizers') library is pointed out as efficient and useful for inference for Byte Pair Encoding (BPE), which is a popular text compression technique that is also used in tokenization.
+
+3. **Custom Vocabulary Training**: If there's a need to train your own vocabulary from scratch, it is suggested to use BPE with the 'SentencePiece' library as it is not the preferred method of the video presenter, but it can still be an effective tool for tokenization.
+
+```markdown
+#### Code Example for Efficient Tokenization
+
+```yaml
+product:
+  type: T-Shirt
+  price: 20.00
+  sizes:
+    - S
+    - M
+    - L
+  reviews:
+    - username: user1
+      rating: 4
+      created_at: '2023-04-19T12:30:00Z'
+    - username: user2
+      rating: 5
+      created_at: '2023-05-02T15:00:00Z'
+```
+
+This YAML example illustrates how the same information uses fewer tokens compared to its JSON counterpart, showcasing efficiency.
+```
+
+Now, while understanding and implementing efficient tokenization can indeed be one of the more cumbersome stages in NLP application development, I encourage you not to overlook its significance. It's not just about efficiency; there are critical issues such as security and AI safety to consider, especially when handling out-of-sample or anomalous data that can cause unpredictable behavior in models.
+
+Eternal glory, as mentioned, to anyone who can streamline the tokenization process, making it seamless and, perhaps in the future, even obsolete. But until then, it's a stage in the NLP pipeline that warrants careful consideration and optimization.

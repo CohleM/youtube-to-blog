@@ -1,0 +1,58 @@
+### Explaining SentencePiece Tokenizer Configuration
+
+As I delve into the intricacies of configuring a SentencePiece tokenizer, I aim to replicate the setup used for training the Llama 2 tokenizer. By inspecting the tokenizer model file released by Meta, I have extracted and mirrored the relevant options for my configuration.
+
+#### Tokenization Algorithm and Vocabulary Size
+The primary algorithm specified for this task is the Byte Pair Encoding (BPE) algorithm, which is a popular choice for creating subword units in tokenization. To define this in the configuration, the `model_type` is set to `"bpe"`. Moreover, the vocabulary size is a crucial aspect of tokenizer performance, and here it is determined to be `400`, which is specified by the `vocab_size` parameter.
+
+```python
+model_type="bpe",
+vocab_size=400,
+```
+
+#### Input and Output Specifications
+Next, I specify the input text file, which in this case is `"toy.txt"`, and set the output prefix for the model to be `"tok400"`. This dictates where the resulting model and vocabulary files will be saved.
+
+```python
+input="toy.txt",
+input_format="text",
+output_prefix="tok400",
+```
+
+#### Normalization Rules
+Normalization is often applied in text processing to standardize and simplify text. However, in the context of language models, preserving the rawness of data can be critical. Thus, I chose to turn off many of these normalization rules to keep the data as close to its original form as possible. This includes disabling extra whitespace removal and overriding the normalization rule name to `"identity"`.
+
+```python
+normalization_rule_name="identity",
+remove_extra_whitespaces=False,
+```
+
+#### Preprocessing and Special Rules
+The configuration encompasses rules for preprocessing and special token handling. SentencePiece's `split_by_whitespaces=True` maintains the integrity of whitespace-separated tokens, while `split_by_number=True` ensures numeric values are treated individually. Also, `split_by_unicode_script=True` allows the tokenizer to treat scripts like Latin, Cyrillic, etc., distinctly.
+
+```python
+split_digits=True,
+split_by_unicode_script=True,
+split_by_whitespace=True,
+split_by_number=True,
+```
+
+#### Training Sentences and Sentence Length
+Important parameters for teaching the model include the number and length of sentences used in processing. `input_sentence_size=20000000` sets a maximum number of sentences to train on, while `max_sentence_length=4192` determines the number of bytes per sentence.
+
+```python
+input_sentence_size=20000000,
+max_sentence_length=4192,
+```
+
+#### Rare Word Treatment and Character Coverage
+Occasionally, rare words need to be addressed—`treat_whitespace_as_suffix=True` helps in such scenarios. Character coverage, defined by `character_coverage=0.99995`, aspires to include as many characters as possible within the vocabulary.
+
+```python
+treat_whitespace_as_suffix=True,
+character_coverage=0.99995,
+```
+
+The extensive options visible in the screenshots affirm how customizable SentencePiece can be and showcase the myriad of considerations that go into fine-tuning a tokenizer for optimal performance in different language processing tasks.
+
+> For more detailed information on the extensive configuration options available, one can refer to the SentencePiece GitHub repository's [options.md](https://github.com/google/sentencepiece/blob/master/doc/options.md) documentation.

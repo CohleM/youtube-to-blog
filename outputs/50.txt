@@ -1,0 +1,49 @@
+### Understanding Vocabulary Size in Transformer Language Models
+
+When we talk about building a language model like GPT (Generative Pre-trained Transformer), vocabulary size is a crucial parameter to consider. A *vocabulary* in this context refers to the set of unique tokens that the model knows and can generate. Tokens can be words, characters, or subwords, depending on how the text is processed before being fed into the model. Let's delve into how vocabulary size impacts different aspects of the model by breaking down complex topics into more understandable sub-topics.
+
+#### Token Embedding Table and Its Relation to Vocabulary Size
+
+Each token in the model's dictionary is represented by an embedding, which is a dense vector that the model learns during training. The token embedding table is essentially a two-dimensional matrix where each token from the vocabulary is associated with a vector of a certain size defined by the *embed dimension* (often denoted as `n_emb`).
+
+```python
+self.token_embedding_table = nn.Embedding(vocab_size, n_emb)
+```
+
+As we can see in the image, the `vocab_size` variable is crucial at this point because it determines the number of rows in the embedding table – one for each unique token.
+
+#### LM Head Layer (Linear Layer at the Output)
+
+At the end of a Transformer model, there is typically a Linear layer responsible for predicting the next token in a sequence. This layer generates logits, which are then turned into probabilities after applying softmax. These probabilities represent the likelihood of each token being the next token in the sequence.
+
+```python
+self.lm_head = nn.Linear(n_emb, vocab_size)
+```
+
+When the vocabulary size increases, the Linear layer (also known as the LM head layer) has to produce logits for more tokens, leading to more computational effort in this part of the model. Essentially, each additional token adds a new dot product operation in this layer.
+
+#### Implications of Increasing Vocabulary Size
+
+**Computational Requirements:**
+As `vocab_size` grows, not only does the embedding table get larger, but so does the computational workload. More tokens mean more parameters to update during backpropagation and more space required to store the embeddings.
+
+**Training Challenges:**
+With an extensive vocabulary, tokens become less frequent in the training data. This reduction in frequency can lead to undertraining, where the model doesn't encounter certain tokens enough to learn their representations effectively.
+
+> If you have a very large vocabulary size, say we have a million tokens, then every one of these tokens is going to come up more and more rarely in the training data because there's a lot more other tokens all over the place. 
+
+**Sequence Length Constraints:**
+Larger vocabularies can also allow the model to cover more content with fewer tokens since tokens can represent larger chunks of text. This can be beneficial as it allows the Transformer to attend to more text at once. However, if the tokens encapsulate too much information, the model might not process that information thoroughly in a single forward pass. 
+
+> The forward pass of the Transformer is not enough to actually process that information appropriately... we're squishing too much information into a single token.
+
+#### Why Can't Vocabulary Size Grow Indefinitely?
+
+Ultimately, there are practical limits to the size of the vocabulary. An infinite vocabulary isn't feasible for reasons including but not limited to memory constraints, computational efficiency, and the law of diminishing returns regarding model performance. The balance between vocabulary size, computational resources, and training effectiveness is therefore a critical design choice when developing language models.
+
+**To summarize the above points in relation to the code snippets from the images:**
+
+- `vocab_size` directly influences the size of the `nn.Embedding` layer and the output `nn.Linear` layer (LM head layer).
+- Increasing `vocab_size` has computational and training ramifications, requiring more memory and potentially leading to undertrained token embeddings.
+- Ensuring that each token occurs frequently enough in training data is critical for effective learning, which becomes more challenging with larger vocabularies.
+- Proper handling of sequence representation with respect to token compression is necessary to ensure the Transformer model processes the information adequately.
